@@ -21,13 +21,25 @@ To use your module in code, you will need to require it.
 
 ```javascript
 import AudioNotification from 'de.appwerft.audionotification';
-AudioNotification.foo();
+const Notification = AudioNotification.createNotification({
+	icon : Ti.Android.R.drawable.ic_dialog_info,
+	cover : '/assets/stationlogo.png',
+	title : "Name of station",
+	subtitle : "Message"
+});
+Notification.update({
+	subtitle : 'new message'
+});
+
+Notification.remove();
+
+
 ```
 
 ### ES5
 
 ```js
-var AudioNotification = require('de.appwerft.audionotification');
-AudioNotification.foo();
+const AudioNotification = require('de.appwerft.audionotification');
+
 ```
 
