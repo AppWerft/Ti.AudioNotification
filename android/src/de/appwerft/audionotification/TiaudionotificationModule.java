@@ -8,6 +8,7 @@
  */
 package de.appwerft.audionotification;
 
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 
@@ -35,33 +36,30 @@ public class TiaudionotificationModule extends KrollModule
 	@Kroll.onAppCreate
 	public static void onAppCreate(TiApplication app)
 	{
-		Log.d(LCAT, "inside onAppCreate");
-		// put module init code that needs to run when the application is created
+		
 	}
 
 	// Methods
 	@Kroll.method
-	public String example()
+	public void init(KrollDict opts)
 	{
 		Log.d(LCAT, "example called");
-		return "hello world";
+		
 	}
+	
 
-	// Properties
-	@Kroll.method
-	@Kroll.getProperty
-	public String getExampleProp()
-	{
-		Log.d(LCAT, "get example property");
-		return "hello world";
-	}
-
-
-	@Kroll.method
-	@Kroll.setProperty
-	public void setExampleProp(String value) {
-		Log.d(LCAT, "set example property: " + value);
-	}
-
+		@Kroll.method
+		public void show(KrollDict opts) {
+			
+		}
+		@Kroll.method
+		public void update() {
+			
+		}
+		@Kroll.method
+		public void hide(KrollDict opts) {
+			
+		}
+	
 }
 
