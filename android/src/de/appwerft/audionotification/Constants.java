@@ -10,7 +10,9 @@ public class Constants {
 		public static String STARTFOREGROUND_ACTION = "de.appwerft.foregroundservice.action.startforeground";
 		public static String STOPFOREGROUND_ACTION = "de.appwerft.foregroundservice.action.stopforeground";
 	}
-
+	public interface MSG {
+		public static int UPDATE = 13;
+	}
 	public interface NOTIFICATION_ID {
 		public static int FOREGROUND_SERVICE = 101;
 	}

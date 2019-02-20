@@ -214,4 +214,23 @@ public class NotificationForegroundService extends Service {
 		}
 		return builder.build();
 	}
+	
+	private void startInForeground() {
+        Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
+        PendingIntent pendingIntent=PendingIntent.getActivity(ctx,0,notificationIntent,0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
+            //    .setSmallIcon(R.drawable.shsl_notification)
+                .setContentTitle("TEST")
+                .setContentText("HELLO")
+                .setTicker("TICKER") 
+                .setContentIntent(pendingIntent);
+        Notification notification=builder.build();
+        if(Build.VERSION.SDK_INT>=26) {
+            NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+          //  channel.setDescription(NOTIFICATION_CHANNEL_DESC);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+        startForeground(NOTIFICATION_ID, notification);
+}
 }
