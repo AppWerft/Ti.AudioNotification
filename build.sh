@@ -8,7 +8,7 @@ fi
 ti build -b -p android -d android
 
 git add -A
-git commit -m '$1'
+git commit -m "$1"
 git push origin master
 
 cd android/dist; unzip -ou *.zip -d ~/Library/Application\ Support/Titanium/ ; cd ../../ 
