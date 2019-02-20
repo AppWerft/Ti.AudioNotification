@@ -62,7 +62,9 @@ To use your module in code, you will need to require it.
 import AudioNotification from 'de.appwerft.audionotification';
 
 AudioNotification.create({
+	lifetimeContainer : win,
 	icon : Ti.Android.R.drawable.ic_dialog_info,
+	style : Ti.Android
 });
 
 AudioNotification.show({
