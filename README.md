@@ -5,17 +5,6 @@
 
 There are some guidelines around creating and managing foreground services. For all API levels, a persistent notification with at least PRIORITY\_LOW must be shown while the service is created. When targeting API 26+ you will also need to set the notification channel to at least IMPORTANCE\_LOW. The notification must have a way for the user to cancel the work, this cancellation can be tied to the action itself: for example, stopping a music track can also stop the music-playback service. Last, the title and description of the foreground service notification must show an accurate description of what the foreground service is doing. 
 
-In manifest we need:
-
-
-
-```xml
-<application>
-	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-	<service android:name=".NotificationForegroundService" >
-</application>
-```
-
 
 
 ## Project Usage
@@ -41,8 +30,7 @@ import AudioNotification from 'de.appwerft.audionotification';
 
 AudioNotification.create({
 	lifetimeContainer : win,
-	icon : Ti.Android.R.drawable.ic_dialog_info,
-	style : Ti.Android
+	icon : Ti.Android.R.drawable.ic_dialog_info
 });
 
 AudioNotification.show({

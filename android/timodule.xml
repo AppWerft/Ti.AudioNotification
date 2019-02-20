@@ -7,9 +7,8 @@
 	<iphone>
 	</iphone>
 	<android xmlns:android="http://schemas.android.com/apk/res/android">
-		<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-		<application>
+ 		<application>
 			<service android:exported="true" android:name=".NotificationForegroundService"/>
-		</application
+                </application>
 	</android>
 </ti:module>
