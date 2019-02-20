@@ -11,31 +11,9 @@ In manifest we need:
 
 ```xml
 <application>
+	<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 	<service android:name=".NotificationForegroundService" >
 </application>
-```
-old example
-// https://www.truiton.com/2014/10/android-foreground-service-example/
- 
-```
-private void startInForeground() {
-        Intent notificationIntent = new Intent(this, WorkoutActivity.class);
-        PendingIntent pendingIntent=PendingIntent.getActivity(this,0,notificationIntent,0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this,NOTIFICATION_CHANNEL_ID)
-                .setSmallIcon(R.drawable.shsl_notification)
-                .setContentTitle("TEST")
-                .setContentText("HELLO")
-                .setTicker("TICKER") 
-                .setContentIntent(pendingIntent);
-        Notification notification=builder.build();
-        if(Build.VERSION.SDK_INT>=26) {
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription(NOTIFICATION_CHANNEL_DESC);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(channel);
-        }
-        startForeground(NOTIFICATION_ID, notification);
-}
 ```
 
 
