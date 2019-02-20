@@ -31,9 +31,9 @@ As statusbar symbol we need a set of pngs in folders `platform/android/res/drawa
 
 
 ```javascript
-import AN from 'de.appwerft.audionotification';
+import AudioNotificationModule from 'de.appwerft.audionotification';
 
-const AudioNotification = AN.createNotification({
+const AudioNotification = AudioNotificationModule.createNotification({
 	lifecycleContainer : win,  // mandatory!
 	icon : "appicon"           // ongs in /platform/android/res/drawable*
 });
