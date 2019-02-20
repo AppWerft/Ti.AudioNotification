@@ -226,7 +226,11 @@ public class NotificationForegroundService extends Service {
                 .setContentIntent(pendingIntent);
         Notification notification=builder.build();
         if(Build.VERSION.SDK_INT>=26) {
-            NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID, NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel(
+            		Constants.NOTIFICATION.CHANNELID, 
+            		Constants.NOTIFICATION.CHANNELNAME, 
+            		
+            		NotificationManager.IMPORTANCE_DEFAULT);
           //  channel.setDescription(NOTIFICATION_CHANNEL_DESC);
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(channel);

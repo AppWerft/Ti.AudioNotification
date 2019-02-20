@@ -13,8 +13,11 @@ public class Constants {
 	public interface MSG {
 		public static int UPDATE = 13;
 	}
-	public interface NOTIFICATION_ID {
+	public interface NOTIFICATION {
 		public static int FOREGROUND_SERVICE = 101;
+		public static String ID = "121234";
+		public static String CHANNELID= "2345";
+		public static String CHANNELNAME= "Hoerdatplayer";
 	}
-
+  
 }
