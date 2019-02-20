@@ -10,6 +10,7 @@
 #include <KrollBindings.h>
 
 #include "de.appwerft.audionotification.TiaudionotificationModule.h"
+#include "de.appwerft.audionotification.NotificationProxy.h"
 
 
 namespace titanium {
@@ -44,10 +45,12 @@ namespace titanium {
 
 		BindEntry* TiaudionotificationBindings::lookupGeneratedInit(const char* name, unsigned int length) {
 			static BindEntry binds[] = {
+				{"de.appwerft.audionotification.NotificationProxy", ::de::appwerft::audionotification::tiaudionotification::NotificationProxy::bindProxy, ::de::appwerft::audionotification::tiaudionotification::NotificationProxy::dispose},
 				{"de.appwerft.audionotification.TiaudionotificationModule", ::de::appwerft::audionotification::TiaudionotificationModule::bindProxy, ::de::appwerft::audionotification::TiaudionotificationModule::dispose}
 			};
 			static std::unordered_map<const char*, BindEntry&, Hash, Compare> map = {
 				{binds[0].name, binds[0]},
+				{binds[1].name, binds[1]},
 			};
 
 			auto result = map.find(name);

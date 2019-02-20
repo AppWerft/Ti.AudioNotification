@@ -47,6 +47,7 @@
  /Users/fuerst/Library/Android/ndk/sources/cxx-stl/llvm-libc++/libcxx/include/__tree \
  /Users/fuerst/Library/Android/ndk/sources/cxx-stl/llvm-libc++/libcxx/include/functional \
  /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/V8Util.h \
+ jni/de.appwerft.audionotification.NotificationProxy.h \
  /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/org.appcelerator.kroll.KrollModule.h \
  /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/Proxy.h
 
@@ -143,6 +144,8 @@ jni/de.appwerft.audionotification.TiaudionotificationModule.h:
 /Users/fuerst/Library/Android/ndk/sources/cxx-stl/llvm-libc++/libcxx/include/functional:
 
 /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/V8Util.h:
+
+jni/de.appwerft.audionotification.NotificationProxy.h:
 
 /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/org.appcelerator.kroll.KrollModule.h:
 

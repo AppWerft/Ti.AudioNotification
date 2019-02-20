@@ -24,8 +24,23 @@ function moduleBootstrap(moduleBinding) {
 		invocationAPIs.push({ namespace: namespace, api: api });
 	}
 
-	
-	return module;
+	addInvocationAPI(module, "Tiaudionotification", "Tiaudionotification", "createNotification");
+		if (!("__propertiesDefined__" in module)) {Object.defineProperties(module, {
+"Notification": {
+get: function() {
+var Notification =  lazyGet(this, "de.appwerft.audionotification.NotificationProxy", "Notification", "Notification");
+return Notification;
+},
+configurable: true
+},
+
+});
+module.constructor.prototype.createNotification = function() {
+return new module["Notification"](arguments);
+}
+}
+module.__propertiesDefined__ = true;
+return module;
 
 }
 exports.bootstrap = moduleBootstrap;

@@ -14,11 +14,12 @@
 namespace de {
 namespace appwerft {
 namespace audionotification {
+	namespace tiaudionotification {
 
-class TiaudionotificationModule : public titanium::Proxy
+class NotificationProxy : public titanium::Proxy
 {
 public:
-	explicit TiaudionotificationModule();
+	explicit NotificationProxy();
 
 	static void bindProxy(v8::Local<v8::Object>, v8::Local<v8::Context>);
 	static v8::Local<v8::FunctionTemplate> getProxyTemplate(v8::Isolate*);
@@ -30,11 +31,16 @@ private:
 	static v8::Persistent<v8::FunctionTemplate> proxyTemplate;
 
 	// Methods -----------------------------------------------------------
+	static void show(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void create(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void update(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void hide(const v8::FunctionCallbackInfo<v8::Value>&);
 
 	// Dynamic property accessors ----------------------------------------
 
 };
 
+	} // namespace tiaudionotification
 } // audionotification
 } // appwerft
 } // de

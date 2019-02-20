@@ -58,7 +58,8 @@
  /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/Proxy.h \
  /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/JavaObject.h \
  /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/EventEmitter.h \
- /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/NativeObject.h
+ /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/NativeObject.h \
+ jni/de.appwerft.audionotification.NotificationProxy.h
 
 /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/v8.h:
 
@@ -179,3 +180,5 @@ jni/de.appwerft.audionotification.TiaudionotificationModule.h:
 /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/EventEmitter.h:
 
 /Users/fuerst/Library/Application\ Support/Titanium/mobilesdk/osx/7.4.0.GA/android/native/include/NativeObject.h:
+
+jni/de.appwerft.audionotification.NotificationProxy.h:
