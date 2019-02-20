@@ -23,13 +23,18 @@ and assets into the application.
 
 To use your module in code, you will need to require it.
 
+### Prerequisites
+As statusbar symbol we need a set of pngs in folders `platform/android/res/drawables/*`
+
+
 ### ES6+ (recommended)
+
 
 ```javascript
 import AudioNotification from 'de.appwerft.audionotification';
 
 AudioNotification.create({
-	lifetimeContainer : win,
+	lifecycleContainer : win,
 	icon : Ti.Android.R.drawable.ic_dialog_info
 });
 

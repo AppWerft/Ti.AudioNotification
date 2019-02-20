@@ -29,7 +29,7 @@ import android.util.Log;
 public class NotificationForegroundService extends Service {
 	private static final String PACKAGE_NAME = TiApplication.getInstance().getPackageName();
 	static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
-	private static final String LCAT = "🎈TiAudioNot";
+	private static final String LCAT = TiaudionotificationModule.LCAT;
 	private final IBinder binder = new LocalBinder();
 	public static final String EXTRA_ACTION = "MYACTION";
 

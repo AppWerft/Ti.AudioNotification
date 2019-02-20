@@ -33,7 +33,7 @@ public class TiaudionotificationModule extends KrollModule {
 	// A reference to the service used to get location updates.
 	private NotificationForegroundService notificationForegroundService = null;
 	// Standard Debugging variables
-	private static final String LCAT = "TiaudionotificationModule";
+	public static final String LCAT = "🎈TiAudioNot";
 	private Context ctx;
 	// Tracks the bound state of the service.
 	private boolean boundState = false;
