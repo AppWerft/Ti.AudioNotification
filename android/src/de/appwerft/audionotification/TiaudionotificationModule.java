@@ -13,6 +13,7 @@ import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiC;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -22,7 +23,9 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Messenger;
+import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
 
 @Kroll.module(name = "Tiaudionotification", id = "de.appwerft.audionotification")
@@ -34,7 +37,7 @@ public class TiaudionotificationModule extends KrollModule {
 	private Context ctx;
 	// Tracks the bound state of the service.
 	private boolean boundState = false;
-	private Messenger messenger = null;
+	private Messenger messenger;
 	// You can define constants with @Kroll.constant, for example:
 	// @Kroll.constant public static final String EXTERNAL_NAME = value;
 
@@ -56,6 +59,8 @@ public class TiaudionotificationModule extends KrollModule {
 
 	// Monitors the state of the connection to the service.
 	private ServiceConnection serviceConnection = new ServiceConnection() {
+		
+
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.i(LCAT, "ServiceConnection: notificationForegroundService connected");
@@ -73,6 +78,7 @@ public class TiaudionotificationModule extends KrollModule {
 		public void onServiceDisconnected(ComponentName name) {
 			notificationForegroundService = null;
 			boundState = false;
+			messenger = null;
 			KrollDict res = new KrollDict();
 			res.put("connected", false);
 			if (hasListeners("ServiceConnectionChanged"))
@@ -101,10 +107,21 @@ public class TiaudionotificationModule extends KrollModule {
 
 	}
 
+	// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
 	@Kroll.method
 	public void show(KrollDict opts) {
-		if (opts.containsKeyAndNotNull("title"))
-		notificationOpts.put("title", opts.getString("title"));
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE))
+			notificationOpts.put(TiC.PROPERTY_TITLE, opts.getString(TiC.PROPERTY_TITLE));
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE))
+			notificationOpts.put(TiC.PROPERTY_SUBTITLE, opts.getString(TiC.PROPERTY_SUBTITLE));
+		if (!boundState)
+			return;
+		Message msg = Message.obtain(null, Constants.MSG.UPDATE, 0, 0);
+		try {
+			messenger.send(msg);
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 
 	}
 
@@ -170,7 +187,7 @@ public class TiaudionotificationModule extends KrollModule {
 
 	@Override
 	public void onDestroy(Activity activity) {
-
+		Log.d(LCAT, "<<<<<< onDestroy called");
 		super.onDestroy(activity);
 	}
 
