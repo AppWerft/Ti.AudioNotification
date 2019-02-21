@@ -7,7 +7,6 @@ import org.appcelerator.titanium.TiC;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ComponentName;
@@ -15,13 +14,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Binder;
 import android.os.Build;
-
-import android.os.Build.VERSION_CODES;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
