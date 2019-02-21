@@ -112,7 +112,7 @@ public class NotificationForegroundService extends Service {
 		notificationIntent.setComponent(new ComponentName(packageName, className));
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-		// builder.setSmallIcon();
+		builder.setSmallIcon(R("applogo", "drawable"));
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
 				: "TEST");
@@ -124,6 +124,7 @@ public class NotificationForegroundService extends Service {
 				: null);
 		builder.setContentIntent(pendingIntent);
 		Notification notification = builder.build();
+		Log.d(LCAT,"Notification build => channel for OREO ");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			Log.d(LCAT, "SDK_VERSION: " + Build.VERSION.CODENAME);
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
