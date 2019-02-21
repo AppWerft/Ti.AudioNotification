@@ -95,7 +95,7 @@ public class NotificationForegroundService extends Service {
 		// when that happens.
 		stopForeground(true);
 		changingConfiguration = false;
-		return binder;
+		return messenger.getBinder();
 	}
 
 	@Override
@@ -151,6 +151,7 @@ public class NotificationForegroundService extends Service {
 		notificationIntent.setComponent(new ComponentName(packageName, className));
 		Log.d(LCAT, "::" + className);
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
+		
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
 		// builder.setSmallIcon(R("applogo", "drawable"));
 		// builder.setSmallIcon();
