@@ -2,6 +2,7 @@ package de.appwerft.audionotification;
 
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.titanium.TiApplication;
+import org.appcelerator.titanium.TiC;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -50,6 +51,7 @@ public class NotificationForegroundService extends Service {
 	private static final int NOTIFICATION_ID = 12345678;
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts;
+	private Notification notification=null;
 
 	public NotificationForegroundService() {
 		super();
@@ -126,7 +128,8 @@ public class NotificationForegroundService extends Service {
 			 * LocationUpdatesService.class), NOTIFICATION_ID, getNotification()); } else {
 			 * startForeground(NOTIFICATION_ID, getNotification()); }
 			 */
-			startForeground(NOTIFICATION_ID, getNotification());
+			notification= getNotification();
+			startForeground(NOTIFICATION_ID, notification);
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
 		// EventBus.getDefault().unregister(this);
@@ -134,82 +137,21 @@ public class NotificationForegroundService extends Service {
 	}
 
 	public void updateNotification(KrollDict opts) {
-
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)) {
+			
+		}
+		NotificationManager notificationManager = (NotificationManager) getSystemService(
+				Context.NOTIFICATION_SERVICE);
+	    notificationManager.notify(NotificationForegroundService.NOTIFICATION_ID, getNotification());
+		
 	}
 
 	public void hideNotification() {
 
 	}
 
-	@SuppressWarnings("deprecation")
-	private Notification _getNotification() {
-		Log.i(LCAT, "getNotification started");
-		Intent intent = new Intent(this, NotificationForegroundService.class);
-
-		// The activityIntent calls the app
-		Intent activityIntent = new Intent(Intent.ACTION_MAIN);
-		activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-		activityIntent.setComponent(new ComponentName(packageName, className));
-		PendingIntent activityPendingIntent = PendingIntent.getActivity(ctx, 1, activityIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
-		// https://stackoverflow.com/questions/45462666/notificationcompat-builder-deprecated-in-android-o
-		final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-		// Android O requires a Notification Channel.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-			NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
-					NOTIFICATION_CHANNEL_NAME, importance);
-			notificationChannel.enableLights(true);
-			notificationChannel.setLightColor(Color.BLUE);
-			NotificationManager notificationManager = (NotificationManager) ctx
-					.getSystemService(Context.NOTIFICATION_SERVICE);
-			notificationManager.createNotificationChannel(notificationChannel);
-			// builder.setChannelId(NOTIFICATION_CHANNEL_ID);
-		}
-
-		// Uri defaultSoundUri = RingtoneManager
-		// .getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-		if (notificationOpts.containsKeyAndNotNull("contentText")) {
-			String contentText = notificationOpts.getString("contentText");
-			builder.setContentText(contentText);
-		}
-		builder.setContentTitle(contentTitle).setOngoing(true).setPriority(Notification.FLAG_FOREGROUND_SERVICE)
-				.setContentIntent(activityPendingIntent).setSmallIcon(Utils.R("ic_launcher", "mipmap")).setSound(null)
-				.setSubText(notificationOpts.getString("subText"))
-
-				.setContentTitle(notificationOpts.getString("contentTitle")).setVibrate(null)
-				.setWhen(System.currentTimeMillis());
-		/*
-		 * if (notificationOpts.containsKeyAndNotNull("bigText")) { CharSequence bigText
-		 * = notificationOpts.getString("bigText"); BigTextStyle style = new
-		 * Notification.BigTextStyle() .bigText(bigText); builder.setStyle(style); }
-		 */
-		if (notificationOpts.containsKeyAndNotNull("lockscreenVisibility")) {
-			builder.setVisibility(notificationOpts.getInt("lockscreenVisibility"));
-		}
-		if (notificationOpts.containsKeyAndNotNull("largeIcon")) {
-			String largeIcon = notificationOpts.getString("largeIcon");
-			/*
-			 * final Target target = new Target() {
-			 * 
-			 * @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
-			 * { builder.setLargeIcon(bitmap); }
-			 * 
-			 * @Override public void onBitmapFailed(Drawable errorDrawable) { Log.e(LCAT,
-			 * "bitMap failed "); }
-			 * 
-			 * @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
-			 * Log.d(LCAT, "onPrepareLoad"); } };
-			 */
-			// Picasso.with(ctx).load(largeIcon).resize(150, 150).into(target);
-		}
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			// builder.setChannelId(CHANNEL_ID); // Channel ID
-		}
-		return builder.build();
-	}
-
+	
+	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
 	private Notification getNotification	() {
 		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
