@@ -24,7 +24,9 @@ and assets into the application.
 To use your module in code, you will need to require it.
 
 ### Prerequisites
-As statusbar symbol we need a set of pngs in folders `platform/android/res/drawables/*`
+As statusbar symbol we need a set of pngs in folders `platform/android/res/drawables/*` in all resolutions from `drawable-xxxhdpi` (96px), `drawable-xxhdpi` (72px) to `drawable-mdpi` (24px) 
+
+
 
 
 ### ES6+ (recommended)
