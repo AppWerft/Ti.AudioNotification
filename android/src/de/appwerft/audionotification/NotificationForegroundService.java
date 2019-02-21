@@ -75,8 +75,6 @@ public class NotificationForegroundService extends Service {
 		return START_STICKY;
 	}
 
-	
-
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
@@ -92,7 +90,7 @@ public class NotificationForegroundService extends Service {
 		// when that happens.
 		stopForeground(true);
 		changingConfiguration = false;
-		
+
 		return binder;
 	}
 
@@ -143,7 +141,7 @@ public class NotificationForegroundService extends Service {
 	}
 
 	@SuppressWarnings("deprecation")
-	private Notification getNotification() {
+	private Notification _getNotification() {
 		Log.i(LCAT, "getNotification started");
 		Intent intent = new Intent(this, NotificationForegroundService.class);
 
@@ -166,7 +164,7 @@ public class NotificationForegroundService extends Service {
 			NotificationManager notificationManager = (NotificationManager) ctx
 					.getSystemService(Context.NOTIFICATION_SERVICE);
 			notificationManager.createNotificationChannel(notificationChannel);
-		//	builder.setChannelId(NOTIFICATION_CHANNEL_ID);
+			// builder.setChannelId(NOTIFICATION_CHANNEL_ID);
 		}
 
 		// Uri defaultSoundUri = RingtoneManager
@@ -191,50 +189,45 @@ public class NotificationForegroundService extends Service {
 		}
 		if (notificationOpts.containsKeyAndNotNull("largeIcon")) {
 			String largeIcon = notificationOpts.getString("largeIcon");
-			/*final Target target = new Target() {
-				@Override
-				public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-					builder.setLargeIcon(bitmap);
-				}
-
-				@Override
-				public void onBitmapFailed(Drawable errorDrawable) {
-					Log.e(LCAT, "bitMap failed ");
-				}
-
-				@Override
-				public void onPrepareLoad(Drawable placeHolderDrawable) {
-					Log.d(LCAT, "onPrepareLoad");
-				}
-			};*/
-			//Picasso.with(ctx).load(largeIcon).resize(150, 150).into(target);
+			/*
+			 * final Target target = new Target() {
+			 * 
+			 * @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+			 * { builder.setLargeIcon(bitmap); }
+			 * 
+			 * @Override public void onBitmapFailed(Drawable errorDrawable) { Log.e(LCAT,
+			 * "bitMap failed "); }
+			 * 
+			 * @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+			 * Log.d(LCAT, "onPrepareLoad"); } };
+			 */
+			// Picasso.with(ctx).load(largeIcon).resize(150, 150).into(target);
 		}
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// builder.setChannelId(CHANNEL_ID); // Channel ID
 		}
 		return builder.build();
 	}
-	
-	private void startInForeground() {
-        Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
-        PendingIntent pendingIntent=PendingIntent.getActivity(ctx,0,notificationIntent,0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
-            //    .setSmallIcon(R.drawable.shsl_notification)
-                .setContentTitle("TEST")
-                .setContentText("HELLO")
-                .setTicker("TICKER") 
-                .setContentIntent(pendingIntent);
-        Notification notification=builder.build();
-        if(Build.VERSION.SDK_INT>=26) {
-            NotificationChannel channel = new NotificationChannel(
-            		Constants.NOTIFICATION.CHANNELID, 
-            		Constants.NOTIFICATION.CHANNELNAME, 
-            		
-            		NotificationManager.IMPORTANCE_DEFAULT);
-          //  channel.setDescription(NOTIFICATION_CHANNEL_DESC);
-            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.createNotificationChannel(channel);
-        }
-        startForeground(NOTIFICATION_ID, notification);
-}
+
+	private Notification getNotification() {
+		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+		notificationIntent.setComponent(new ComponentName(packageName, className));
+		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
+				// .setSmallIcon(R.drawable.shsl_notification)
+				.setContentTitle("TEST").setContentText("HELLO").setTicker("TICKER").setContentIntent(pendingIntent);
+		Notification notification = builder.build();
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
+					Constants.NOTIFICATION.CHANNELNAME,
+
+					NotificationManager.IMPORTANCE_DEFAULT);
+			// channel.setDescription(NOTIFICATION_CHANNEL_DESC);
+			NotificationManager notificationManager = (NotificationManager) getSystemService(
+					Context.NOTIFICATION_SERVICE);
+			notificationManager.createNotificationChannel(channel);
+		}
+		return notification;
+	}
 }
