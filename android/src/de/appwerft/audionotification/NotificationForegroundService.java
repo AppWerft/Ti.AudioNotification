@@ -27,17 +27,14 @@ public class NotificationForegroundService extends Service {
 	private static final String PACKAGE_NAME = TiApplication.getInstance().getPackageName();
 	static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
 	private static final String LCAT = TiaudionotificationModule.LCAT;
-	
 	public static final String EXTRA_ACTION = "MYACTION";
-
 	private final Context ctx;
 	private final String packageName;
 	private final String className;
 	private boolean changingConfiguration;
-
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts;
-	
+
 	public NotificationForegroundService() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
@@ -51,27 +48,20 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT, "getSystemService inside onCreate");
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
+
 	@Override
 	public IBinder onBind(Intent intent) {
-		// Called when a client comes to
-		// the foreground
-		// and binds with this service. The service should cease to be a
-		// foreground service
-		// when that happens.
 		stopForeground(true);
 		changingConfiguration = false;
-		Log.d(LCAT,"onBind");
-		return binder;//messenger.getBinder();
+		Log.d(LCAT, "onBind");
+		return binder;// messenger.getBinder();
 	}
-	/**
-     * Class for clients to access.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with
-     * IPC.
-     */
+
 	private final IBinder binder = new LocalBinder();
+
 	public class LocalBinder extends Binder {
 		NotificationForegroundService getService() {
-			Log.d(LCAT,"LocalBinder");
+			Log.d(LCAT, "LocalBinder");
 			return NotificationForegroundService.this;
 		}
 	}
@@ -87,16 +77,8 @@ public class NotificationForegroundService extends Service {
 		changingConfiguration = true;
 	}
 
-	
-
 	@Override
 	public void onRebind(Intent intent) {
-		// Called when a client (MainActivity in case of this sample) returns to
-		// the foreground
-		// and binds once again with this service. The service should cease to
-		// be a foreground
-		// service when that happens.
-		Log.i(LCAT, "< ~~~~~ in onRebind()");
 		stopForeground(true);
 		changingConfiguration = false;
 		super.onRebind(intent);
@@ -104,34 +86,22 @@ public class NotificationForegroundService extends Service {
 
 	@Override
 	public boolean onUnbind(Intent intent) {
-		Log.i(LCAT, "Last client unbound from service mChangingConfiguration=" + changingConfiguration);
-
-		// Called when the last client (MainActivity in case of this sample)
-		// unbinds from this
-		// service. If this method is called due to a configuration change in
-		// MainActivity, we
-		// do nothing. Otherwise, we make this service a foreground service.
 		if (!changingConfiguration) {
-		getNotification();
-			
+			getNotification();
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
-		// EventBus.getDefault().unregister(this);
 		return true; // Ensures onRebind() is called when a client re-binds.
 	}
 
 	public void updateNotification(KrollDict opts) {
 		notificationOpts = opts;
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)) {
-
 		}
-		
 		getNotification();
 
 	}
 
 	public void hideNotification() {
-
 	}
 
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
@@ -155,7 +125,7 @@ public class NotificationForegroundService extends Service {
 		builder.setContentIntent(pendingIntent);
 		Notification notification = builder.build();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			Log.d(LCAT,"SDK_VERSION: " + Build.VERSION.CODENAME);
+			Log.d(LCAT, "SDK_VERSION: " + Build.VERSION.CODENAME);
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
 					Constants.NOTIFICATION.CHANNELNAME, NotificationManager.IMPORTANCE_DEFAULT);
 			channel.setDescription(Constants.NOTIFICATION.CHANNEL_DESC);
@@ -165,13 +135,9 @@ public class NotificationForegroundService extends Service {
 		}
 		Log.d(LCAT, "Notification created");
 		Log.d(LCAT, notification.toString());
-		
 		notificationManager.notify(Constants.NOTIFICATION.ID, notification);
 	}
 
-	/**
-	 * Handler of incoming messages from clients.
-	 */
 	class IncomingHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
@@ -186,12 +152,8 @@ public class NotificationForegroundService extends Service {
 		}
 	}
 
-	/**
-	 * Target we publish for clients to send messages to IncomingHandler.
-	 */
 	final Messenger messenger = new Messenger(new IncomingHandler());
 
-	/* helper function for safety getting resources */
 	private int R(String name, String type) {
 		int id = 0;
 		try {
