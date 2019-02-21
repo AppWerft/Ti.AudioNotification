@@ -78,6 +78,7 @@ public class NotificationForegroundService extends Service {
 		// when that happens.
 		stopForeground(true);
 		changingConfiguration = false;
+		Log.d(LCAT,"onBind");
 		return binder;//messenger.getBinder();
 	}
 	/**
@@ -88,6 +89,7 @@ public class NotificationForegroundService extends Service {
 	private final IBinder binder = new LocalBinder();
 	public class LocalBinder extends Binder {
 		NotificationForegroundService getService() {
+			Log.d(LCAT,"LocalBinder");
 			return NotificationForegroundService.this;
 		}
 	}
