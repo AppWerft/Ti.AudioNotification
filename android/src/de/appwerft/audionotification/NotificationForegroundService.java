@@ -45,13 +45,13 @@ public class NotificationForegroundService extends Service {
 	private String contentText = null;
 	private int priority = 102;
 	private int interval = 10;
-
+	
 	public static final String NOTIFICATION_CHANNEL_ID = "1337";
 	public static final String NOTIFICATION_CHANNEL_NAME = "backgroundradioplayer";
 	private static final int NOTIFICATION_ID = 12345678;
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts;
-	private Notification notification=null;
+	private Notification notification = null;
 
 	public NotificationForegroundService() {
 		super();
@@ -128,7 +128,7 @@ public class NotificationForegroundService extends Service {
 			 * LocationUpdatesService.class), NOTIFICATION_ID, getNotification()); } else {
 			 * startForeground(NOTIFICATION_ID, getNotification()); }
 			 */
-			notification= getNotification();
+			notification = getNotification();
 			startForeground(NOTIFICATION_ID, notification);
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
@@ -137,29 +137,38 @@ public class NotificationForegroundService extends Service {
 	}
 
 	public void updateNotification(KrollDict opts) {
+		notificationOpts = opts;
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)) {
-			
+
 		}
-		NotificationManager notificationManager = (NotificationManager) getSystemService(
-				Context.NOTIFICATION_SERVICE);
-	    notificationManager.notify(NotificationForegroundService.NOTIFICATION_ID, getNotification());
-		
+		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		notificationManager.notify(NotificationForegroundService.NOTIFICATION_ID, getNotification());
+
 	}
 
 	public void hideNotification() {
 
 	}
 
-	
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
-	private Notification getNotification	() {
+	private Notification getNotification() {
 		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 		notificationIntent.setComponent(new ComponentName(packageName, className));
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx)
-				// .setSmallIcon(R.drawable.shsl_notification)
-				.setContentTitle("TEST").setContentText("HELLO").setTicker("TICKER").setContentIntent(pendingIntent);
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
+		// .setSmallIcon(R.drawable.shsl_notification)
+		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
+				? notificationOpts.getString(TiC.PROPERTY_TITLE)
+				: "");
+		builder.setContentText(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE)
+				? notificationOpts.getString(TiC.PROPERTY_SUBTITLE)
+				: "");
+		builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.LOCAL)
+				? (Bitmap)notificationOpts.get(Constants.LOGO.LOCAL)
+				: null);
+		
+		builder.setContentIntent(pendingIntent);
 		Notification notification = builder.build();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
@@ -173,25 +182,49 @@ public class NotificationForegroundService extends Service {
 		}
 		return notification;
 	}
-	/**
-     * Handler of incoming messages from clients.
-     */
-    class IncomingHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case Constants.NOTIFICATION.FOREGROUND_SERVICE:
-                   KrollDict opts = (KrollDict) msg.obj;
-                   updateNotification(opts);
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    }
-    /**
-     * Target we publish for clients to send messages to IncomingHandler.
-     */
-    final Messenger messenger = new Messenger(new IncomingHandler());
 
+	/**
+	 * Handler of incoming messages from clients.
+	 */
+	class IncomingHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case Constants.NOTIFICATION.FOREGROUND_SERVICE:
+				KrollDict opts = (KrollDict) msg.obj;
+				updateNotification(opts);
+				break;
+			default:
+				super.handleMessage(msg);
+			}
+		}
+	}
+
+	/**
+	 * Target we publish for clients to send messages to IncomingHandler.
+	 */
+	final Messenger messenger = new Messenger(new IncomingHandler());
+	
+	/*if (notificationOpts.containsKeyAndNotNull("largeIcon")) {
+	String largeIcon = notificationOpts.getString("largeIcon");
+		final Target target = new Target() {
+			@Override
+			public void onBitmapLoaded(Bitmap bitmap,
+					Picasso.LoadedFrom from) {
+				builder.setLargeIcon(bitmap);
+			}
+
+			@Override
+			public void onBitmapFailed(Drawable errorDrawable) {
+				Log.e(LCAT, "bitMap failed ");
+			}
+
+			@Override
+			public void onPrepareLoad(Drawable placeHolderDrawable) {
+				Log.d(LCAT, "onPrepareLoad");
+			}
+		};
+		Picasso.with(ctx).load(largeIcon).resize(150, 150).into(target);
+}*/
+	
 }

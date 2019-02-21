@@ -13,6 +13,10 @@ public class Constants {
 	public interface MSG {
 		public static int UPDATE = 13;
 	}
+	public interface LOGO {
+		public static String LOCAL = "LOCAL";
+		public static String REMOTE = "REMOTE";
+	}
 	public interface NOTIFICATION {
 		public static int FOREGROUND_SERVICE = 101;
 		public static String ID = "121234";
