@@ -207,20 +207,6 @@ public class NotificationForegroundService extends Service {
 	 */
 	final Messenger messenger = new Messenger(new IncomingHandler());
 
-	/*
-	 * if (notificationOpts.containsKeyAndNotNull("largeIcon")) { String largeIcon =
-	 * notificationOpts.getString("largeIcon"); final Target target = new Target() {
-	 * 
-	 * @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
-	 * { builder.setLargeIcon(bitmap); }
-	 * 
-	 * @Override public void onBitmapFailed(Drawable errorDrawable) { Log.e(LCAT,
-	 * "bitMap failed "); }
-	 * 
-	 * @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
-	 * Log.d(LCAT, "onPrepareLoad"); } };
-	 * Picasso.with(ctx).load(largeIcon).resize(150, 150).into(target); }
-	 */
 	/* helper function for safety getting resources */
 	private int R(String name, String type) {
 		int id = 0;
