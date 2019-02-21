@@ -78,7 +78,7 @@ public class NotificationForegroundService extends Service {
 		// when that happens.
 		stopForeground(true);
 		changingConfiguration = false;
-		return messenger.getBinder();
+		return binder;//messenger.getBinder();
 	}
 	/**
      * Class for clients to access.  Because we know this service always
