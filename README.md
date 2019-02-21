@@ -35,11 +35,12 @@ import AudioNotificationModule from 'de.appwerft.audionotification';
 
 const AudioNotification = AudioNotificationModule.createNotification({
 	lifecycleContainer : win,  // mandatory!
+	importance : AudioNotificationModule.NOTIFICATION_IMPORTANCE_DEFAULT,
 	icon : "appicon"           // ongs in /platform/android/res/drawable*
 });
 
 AudioNotification.show({
-	cover : '/assets/stations/ndrkultur.png',
+	cover : '/assets/stations/ndrkultur.png', // or 'http://'
 	title : "ndr kulturradio",
 	subtitle : 'Beethoven: 9. Symfonie'
 });

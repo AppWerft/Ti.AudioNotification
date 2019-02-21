@@ -103,6 +103,25 @@ Local<FunctionTemplate> TiaudionotificationModule::getProxyTemplate(Isolate* iso
 		titanium::Proxy::setIndexedProperty);
 
 	// Constants --------------------------------------------------------------
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		LOGE(TAG, "Failed to get environment in TiaudionotificationModule");
+		//return;
+	}
+
+
+			DEFINE_INT_CONSTANT(isolate, prototypeTemplate, "NOTIFICATION_IMPORTANCE_NONE", 0);
+
+			DEFINE_INT_CONSTANT(isolate, prototypeTemplate, "NOTIFICATION_IMPORTANCE_DEFAULT", 3);
+
+			DEFINE_INT_CONSTANT(isolate, prototypeTemplate, "NOTIFICATION_IMPORTANCE_LOW", 2);
+
+			DEFINE_INT_CONSTANT(isolate, prototypeTemplate, "NOTIFICATION_IMPORTANCE_MAX", 5);
+
+			DEFINE_INT_CONSTANT(isolate, prototypeTemplate, "NOTIFICATION_IMPORTANCE_HIGHT", 4);
+
+			DEFINE_INT_CONSTANT(isolate, prototypeTemplate, "NOTIFICATION_IMPORTANCE_MIN", 1);
+
 
 	// Dynamic properties -----------------------------------------------------
 

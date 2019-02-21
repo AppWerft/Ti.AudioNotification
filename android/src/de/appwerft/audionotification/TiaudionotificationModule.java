@@ -27,6 +27,9 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.v4.content.LocalBroadcastManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 
 @Kroll.module(name = "Tiaudionotification", id = "de.appwerft.audionotification")
 public class TiaudionotificationModule extends KrollModule {
@@ -35,6 +38,18 @@ public class TiaudionotificationModule extends KrollModule {
 	// Standard Debugging variables
 	public static final String LCAT = "🎈TiAudioNot";
 	
+	@Kroll.constant
+	public static final int NOTIFICATION_IMPORTANCE_DEFAULT = NotificationManager.IMPORTANCE_DEFAULT;
+	@Kroll.constant
+	public static final int NOTIFICATION_IMPORTANCE_HIGHT = NotificationManager.IMPORTANCE_HIGH;
+	@Kroll.constant
+	public static final int NOTIFICATION_IMPORTANCE_LOW = NotificationManager.IMPORTANCE_LOW;
+	@Kroll.constant
+	public static final int NOTIFICATION_IMPORTANCE_NONE = NotificationManager.IMPORTANCE_NONE;
+	@Kroll.constant
+	public static final int NOTIFICATION_IMPORTANCE_MIN = NotificationManager.IMPORTANCE_MIN;
+	@Kroll.constant
+	public static final int NOTIFICATION_IMPORTANCE_MAX = NotificationManager.IMPORTANCE_MAX;
 	public TiaudionotificationModule() {
 		super();
 	}
