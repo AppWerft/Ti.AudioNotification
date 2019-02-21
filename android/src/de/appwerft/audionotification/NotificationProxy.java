@@ -38,6 +38,7 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import de.appwerft.audionotification.NotificationForegroundService.LocalBinder;
 
 @Kroll.proxy(creatableInModule = TiaudionotificationModule.class)
 public class NotificationProxy extends KrollProxy {
@@ -68,28 +69,7 @@ public class NotificationProxy extends KrollProxy {
 		}
 	}
 
-	// Monitors the state of the connection to the service.
-	private ServiceConnection serviceConnection = new ServiceConnection() {
-		@Override
-		public void onServiceConnected(ComponentName name, IBinder service) {
-			Log.i(LCAT, "ServiceConnection: >>>>  notificationForegroundService connected");
-			Log.i(LCAT, service.toString());
-			/* this serviceref will use for updates */
-//			notificationForegroundService = ((NotificationForegroundService.LocalBinder) service).getService();
-			
-			// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
-			//messenger = new Messenger(service);
-			boundState = true;
-		}
-
-		@Override
-		public void onServiceDisconnected(ComponentName name) {
-			Log.i(LCAT, "ServiceConnection: <<<< notificationForegroundService disconnected");
-			notificationForegroundService = null;
-			boundState = false;
-			messenger = null;
-		}
-	};
+	
 
 	public NotificationProxy() {
 		super();
@@ -130,17 +110,19 @@ public class NotificationProxy extends KrollProxy {
 		}
 
 	}
+
 	private Bitmap loadImage(String imageName) {
 		Bitmap bitmap = null;
 		try {
 			TiBaseFile file = TiFileFactory.createTitaniumFile(new String[] { resolveUrl(null, imageName) }, false);
 			bitmap = TiUIHelper.createBitmap(file.getInputStream());
 		} catch (IOException e) {
-			
+
 			return null;
 		}
 		return bitmap;
 	}
+
 	@Kroll.method
 	public void update(KrollDict opts) {
 		if (opts.containsKeyAndNotNull("largeIcon")) {
@@ -170,24 +152,21 @@ public class NotificationProxy extends KrollProxy {
 		// signals to the service
 		// that since this activity is in the foreground, the service can exit
 		// foreground mode.
-		
-		boolean result = ctx.bindService(new Intent(ctx, NotificationForegroundService.class), serviceConnection,
-				Context.BIND_AUTO_CREATE);
-		if (result==false) 
-			Log.e(LCAT,"cannot bind service, maybe you forgot to add the service to manifest\n<service android:name=\"de.appwerft.audionotification.NotificationForegroundService\"/>");
+		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		if (!ctx.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE))
+			Log.e(LCAT,
+					"cannot bind service, maybe you forgot to add the service to manifest\n<service android:name=\"de.appwerft.audionotification.NotificationForegroundService\"/>");
 	}
 
 	@Override
 	public void onResume(Activity activity) {
 		super.onResume(activity);
-		Log.d(LCAT, ">>>>> onResume called");
 		// LocalBroadcastManager.getInstance(ctx).registerReceiver(receiver,
 		// new IntentFilter(NotificationForegroundService.ACTION_BROADCAST));
 	}
 
 	@Override
 	public void onPause(Activity activity) {
-		Log.d(LCAT, "<<<<<< onPause called");
 		LocalBroadcastManager.getInstance(ctx).unregisterReceiver(receiver);
 		super.onPause(activity);
 	}
@@ -212,8 +191,35 @@ public class NotificationProxy extends KrollProxy {
 		Log.d(LCAT, "<<<<<< onDestroy called");
 		super.onDestroy(activity);
 	}
-	
-	
+	// Monitors the state of the connection to the service.
+		private ServiceConnection serviceConnection = new ServiceConnection() {
+			@Override
+			public void onBindingDied(ComponentName name) {
 
+			}
+			@Override
+			public void onNullBinding(ComponentName name) {
 
+			}
+			@Override
+			public void onServiceConnected(ComponentName name, IBinder service) {
+				Log.i(LCAT, "ServiceConnection: >>>>  notificationForegroundService connected");
+				Log.i(LCAT, service.toString());
+				LocalBinder binder = (LocalBinder) service;
+				/* this serviceref will use for updates */
+				notificationForegroundService = ((NotificationForegroundService.LocalBinder) service).getService();
+
+				// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
+				// messenger = new Messenger(service);
+				boundState = true;
+			}
+
+			@Override
+			public void onServiceDisconnected(ComponentName name) {
+				Log.i(LCAT, "ServiceConnection: <<<< notificationForegroundService disconnected");
+				notificationForegroundService = null;
+				boundState = false;
+				messenger = null;
+			}
+		};
 }
