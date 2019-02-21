@@ -73,10 +73,11 @@ public class NotificationProxy extends KrollProxy {
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.i(LCAT, "ServiceConnection: >>>>  notificationForegroundService connected");
-			notificationForegroundService = ((NotificationForegroundService.LocalBinder) service).getService();
 			Log.i(LCAT, service.toString());
+			notificationForegroundService = ((NotificationForegroundService.LocalBinder) service).getService();
+			
 			// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
-			messenger = new Messenger(service);
+			//messenger = new Messenger(service);
 			boundState = true;
 		}
 
@@ -168,7 +169,7 @@ public class NotificationProxy extends KrollProxy {
 		// signals to the service
 		// that since this activity is in the foreground, the service can exit
 		// foreground mode.
-		Log.d(LCAT,serviceConnection.toString());
+		
 		boolean result = ctx.bindService(new Intent(ctx, NotificationForegroundService.class), serviceConnection,
 				Context.BIND_AUTO_CREATE);
 		if (result==false) 
