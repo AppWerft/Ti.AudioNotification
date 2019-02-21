@@ -74,7 +74,8 @@ public class NotificationProxy extends KrollProxy {
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.i(LCAT, "ServiceConnection: >>>>  notificationForegroundService connected");
 			Log.i(LCAT, service.toString());
-			notificationForegroundService = ((NotificationForegroundService.LocalBinder) service).getService();
+			/* this serviceref will use for updates */
+//			notificationForegroundService = ((NotificationForegroundService.LocalBinder) service).getService();
 			
 			// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
 			//messenger = new Messenger(service);
