@@ -55,6 +55,7 @@ public class NotificationForegroundService extends Service {
 
 	public NotificationForegroundService() {
 		super();
+		Log.d(LCAT,"NotificationForegroundService CONSTRUCTOR");
 		ctx = TiApplication.getInstance().getApplicationContext();
 		packageName = TiApplication.getInstance().getPackageName();
 		className = packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName();
