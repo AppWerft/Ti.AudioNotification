@@ -45,7 +45,7 @@ public class NotificationForegroundService extends Service {
 	private String contentText = null;
 	private int priority = 102;
 	private int interval = 10;
-	
+
 	public static final String NOTIFICATION_CHANNEL_ID = "1337";
 	public static final String NOTIFICATION_CHANNEL_NAME = "backgroundradioplayer";
 	private static final int NOTIFICATION_ID = 12345678;
@@ -58,6 +58,7 @@ public class NotificationForegroundService extends Service {
 		ctx = TiApplication.getInstance().getApplicationContext();
 		packageName = TiApplication.getInstance().getPackageName();
 		className = packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName();
+		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 
 	@Override
@@ -120,17 +121,8 @@ public class NotificationForegroundService extends Service {
 		// MainActivity, we
 		// do nothing. Otherwise, we make this service a foreground service.
 		if (!changingConfiguration) {
-			Log.i(LCAT, "Starting foreground service");
-			/*
-			 * // TODO(developer). If targeting O, use the following code. if
-			 * (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
-			 * notificationManager.startServiceInForeground(new Intent(this,
-			 * LocationUpdatesService.class), NOTIFICATION_ID, getNotification()); } else {
-			 * startForeground(NOTIFICATION_ID, getNotification()); }
-			 */
-			notification = getNotification();
-			Log.d(LCAT,notification.toString());
-			startForeground(NOTIFICATION_ID, notification);
+			notificationManager.notify(NotificationForegroundService.NOTIFICATION_ID, getNotification());
+			
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
 		// EventBus.getDefault().unregister(this);
@@ -142,7 +134,7 @@ public class NotificationForegroundService extends Service {
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)) {
 
 		}
-		NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		
 		notificationManager.notify(NotificationForegroundService.NOTIFICATION_ID, getNotification());
 
 	}
@@ -153,14 +145,15 @@ public class NotificationForegroundService extends Service {
 
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
 	private Notification getNotification() {
+		Log.d(LCAT, "getNotification!");
 		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 		notificationIntent.setComponent(new ComponentName(packageName, className));
-		Log.d(LCAT,packageName + "::"+ className);
+		Log.d(LCAT, "::" + className);
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-		builder.setSmallIcon(R("applogo", "drawable"));
-		//builder.setSmallIcon();
+		// builder.setSmallIcon(R("applogo", "drawable"));
+		// builder.setSmallIcon();
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
 				: "TEST");
@@ -168,22 +161,21 @@ public class NotificationForegroundService extends Service {
 				? notificationOpts.getString(TiC.PROPERTY_SUBTITLE)
 				: "UNTERTEST");
 		builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.LOCAL)
-				? (Bitmap)notificationOpts.get(Constants.LOGO.LOCAL)
+				? (Bitmap) notificationOpts.get(Constants.LOGO.LOCAL)
 				: null);
-		
+
 		builder.setContentIntent(pendingIntent);
 		Notification notification = builder.build();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
-					Constants.NOTIFICATION.CHANNELNAME,
-					NotificationManager.IMPORTANCE_DEFAULT);
+					Constants.NOTIFICATION.CHANNELNAME, NotificationManager.IMPORTANCE_DEFAULT);
 			// channel.setDescription(NOTIFICATION_CHANNEL_DESC);
 			NotificationManager notificationManager = (NotificationManager) getSystemService(
 					Context.NOTIFICATION_SERVICE);
 			notificationManager.createNotificationChannel(channel);
 		}
-		Log.d(LCAT,"Notification created");
-		Log.d(LCAT,notification.toString());
+		Log.d(LCAT, "Notification created");
+		Log.d(LCAT, notification.toString());
 		return notification;
 	}
 
@@ -208,37 +200,29 @@ public class NotificationForegroundService extends Service {
 	 * Target we publish for clients to send messages to IncomingHandler.
 	 */
 	final Messenger messenger = new Messenger(new IncomingHandler());
-	
-	/*if (notificationOpts.containsKeyAndNotNull("largeIcon")) {
-	String largeIcon = notificationOpts.getString("largeIcon");
-		final Target target = new Target() {
-			@Override
-			public void onBitmapLoaded(Bitmap bitmap,
-					Picasso.LoadedFrom from) {
-				builder.setLargeIcon(bitmap);
-			}
 
-			@Override
-			public void onBitmapFailed(Drawable errorDrawable) {
-				Log.e(LCAT, "bitMap failed ");
-			}
-
-			@Override
-			public void onPrepareLoad(Drawable placeHolderDrawable) {
-				Log.d(LCAT, "onPrepareLoad");
-			}
-		};
-		Picasso.with(ctx).load(largeIcon).resize(150, 150).into(target);
-}*/
+	/*
+	 * if (notificationOpts.containsKeyAndNotNull("largeIcon")) { String largeIcon =
+	 * notificationOpts.getString("largeIcon"); final Target target = new Target() {
+	 * 
+	 * @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from)
+	 * { builder.setLargeIcon(bitmap); }
+	 * 
+	 * @Override public void onBitmapFailed(Drawable errorDrawable) { Log.e(LCAT,
+	 * "bitMap failed "); }
+	 * 
+	 * @Override public void onPrepareLoad(Drawable placeHolderDrawable) {
+	 * Log.d(LCAT, "onPrepareLoad"); } };
+	 * Picasso.with(ctx).load(largeIcon).resize(150, 150).into(target); }
+	 */
 	/* helper function for safety getting resources */
 	private int R(String name, String type) {
 		int id = 0;
 		try {
-			id = this.getResources().getIdentifier(name, type,
-					this.getPackageName());
+			id = this.getResources().getIdentifier(name, type, this.getPackageName());
 		} catch (Exception e) {
 			return id;
 		}
 		return id;
-}
+	}
 }
