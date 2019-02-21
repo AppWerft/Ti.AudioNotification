@@ -21,8 +21,10 @@ import android.os.Binder;
 import android.os.Build;
 
 import android.os.Build.VERSION_CODES;
-
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -90,8 +92,7 @@ public class NotificationForegroundService extends Service {
 		// when that happens.
 		stopForeground(true);
 		changingConfiguration = false;
-
-		return binder;
+		return messenger.getBinder();
 	}
 
 	@Override
@@ -209,7 +210,7 @@ public class NotificationForegroundService extends Service {
 		return builder.build();
 	}
 
-	private Notification getNotification() {
+	private Notification getNotification	() {
 		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 		notificationIntent.setComponent(new ComponentName(packageName, className));
@@ -230,4 +231,25 @@ public class NotificationForegroundService extends Service {
 		}
 		return notification;
 	}
+	/**
+     * Handler of incoming messages from clients.
+     */
+    class IncomingHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case Constants.NOTIFICATION.FOREGROUND_SERVICE:
+                   KrollDict opts = (KrollDict) msg.obj;
+                   updateNotification(opts);
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    }
+    /**
+     * Target we publish for clients to send messages to IncomingHandler.
+     */
+    final Messenger messenger = new Messenger(new IncomingHandler());
+
 }
