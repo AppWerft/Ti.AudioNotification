@@ -10,18 +10,22 @@ public class Constants {
 		public static String STARTFOREGROUND_ACTION = "de.appwerft.foregroundservice.action.startforeground";
 		public static String STOPFOREGROUND_ACTION = "de.appwerft.foregroundservice.action.stopforeground";
 	}
+
 	public interface MSG {
 		public static int UPDATE = 13;
 	}
+
 	public interface LOGO {
 		public static String LOCAL = "LOCAL";
 		public static String REMOTE = "REMOTE";
 	}
+
 	public interface NOTIFICATION {
 		public static int FOREGROUND_SERVICE = 101;
 		public static int ID = 121234;
-		public static String CHANNELID= "2345";
-		public static String CHANNELNAME= "Hoerdatplayer";
+		public static String CHANNELID = "2345";
+		public static String CHANNELNAME = "Hoerdatplayer";
+		public static String CHANNEL_DESC = "Hördatplayer";
 	}
-  
+
 }

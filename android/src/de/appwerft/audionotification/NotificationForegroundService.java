@@ -40,12 +40,9 @@ public class NotificationForegroundService extends Service {
 	
 	public NotificationForegroundService() {
 		super();
-		Log.d(LCAT,"NotificationForegroundService CONSTRUCTOR");
 		ctx = TiApplication.getInstance().getApplicationContext();
 		packageName = TiApplication.getInstance().getPackageName();
 		className = packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName();
-		Log.d(LCAT,"className="+className);
-			
 	}
 
 	@Override
@@ -81,7 +78,6 @@ public class NotificationForegroundService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-
 		return START_STICKY;
 	}
 
@@ -144,11 +140,8 @@ public class NotificationForegroundService extends Service {
 		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 		notificationIntent.setComponent(new ComponentName(packageName, className));
-		Log.d(LCAT, "::" + className);
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
-		
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-		// builder.setSmallIcon(R("applogo", "drawable"));
 		// builder.setSmallIcon();
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
@@ -159,13 +152,13 @@ public class NotificationForegroundService extends Service {
 		builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.LOCAL)
 				? (Bitmap) notificationOpts.get(Constants.LOGO.LOCAL)
 				: null);
-
 		builder.setContentIntent(pendingIntent);
 		Notification notification = builder.build();
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			Log.d(LCAT,"SDK_VERSION: " + Build.VERSION.CODENAME);
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
 					Constants.NOTIFICATION.CHANNELNAME, NotificationManager.IMPORTANCE_DEFAULT);
-			// channel.setDescription(NOTIFICATION_CHANNEL_DESC);
+			channel.setDescription(Constants.NOTIFICATION.CHANNEL_DESC);
 			NotificationManager notificationManager = (NotificationManager) getSystemService(
 					Context.NOTIFICATION_SERVICE);
 			notificationManager.createNotificationChannel(channel);
