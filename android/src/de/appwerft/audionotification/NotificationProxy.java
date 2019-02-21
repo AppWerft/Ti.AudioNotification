@@ -171,7 +171,8 @@ public class NotificationProxy extends KrollProxy {
 		Log.d(LCAT,serviceConnection.toString());
 		boolean result = ctx.bindService(new Intent(ctx, NotificationForegroundService.class), serviceConnection,
 				Context.BIND_AUTO_CREATE);
-		Log.d(LCAT,"result="+result);
+		if (!result) 
+		Log.e(LCAT,"cannot bind service, maybe you forgot to add the service to manifest\n<service android:name=\".NotificationForegroundService\"/>");
 	}
 
 	@Override
