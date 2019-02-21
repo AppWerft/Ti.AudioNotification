@@ -33,7 +33,7 @@ public class NotificationForegroundService extends Service {
 	private static final String PACKAGE_NAME = TiApplication.getInstance().getPackageName();
 	static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
 	private static final String LCAT = TiaudionotificationModule.LCAT;
-	private final IBinder binder = new LocalBinder();
+	
 	public static final String EXTRA_ACTION = "MYACTION";
 
 	private final Context ctx;
@@ -69,10 +69,25 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT, "getSystemService inside onCreate");
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
-
+	@Override
+	public IBinder onBind(Intent intent) {
+		// Called when a client comes to
+		// the foreground
+		// and binds with this service. The service should cease to be a
+		// foreground service
+		// when that happens.
+		stopForeground(true);
+		changingConfiguration = false;
+		return messenger.getBinder();
+	}
+	/**
+     * Class for clients to access.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with
+     * IPC.
+     */
+	private final IBinder binder = new LocalBinder();
 	public class LocalBinder extends Binder {
 		NotificationForegroundService getService() {
-			
 			return NotificationForegroundService.this;
 		}
 	}
@@ -89,17 +104,7 @@ public class NotificationForegroundService extends Service {
 		changingConfiguration = true;
 	}
 
-	@Override
-	public IBinder onBind(Intent intent) {
-		// Called when a client comes to
-		// the foreground
-		// and binds with this service. The service should cease to be a
-		// foreground service
-		// when that happens.
-		stopForeground(true);
-		changingConfiguration = false;
-		return messenger.getBinder();
-	}
+	
 
 	@Override
 	public void onRebind(Intent intent) {
