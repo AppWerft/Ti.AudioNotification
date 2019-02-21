@@ -163,13 +163,15 @@ public class NotificationProxy extends KrollProxy {
 	@Override
 	public void onStart(Activity activity) {
 		super.onStart(activity);
-		Log.d(LCAT, ">>>>>>>>>>>>>>>>> onStart called");
+		Log.d(LCAT, ">>>>>>>>>>>>>>>>>>>>>>>>>> onStart called");
 		// Bind to the service. If the service is in foreground mode, this
 		// signals to the service
 		// that since this activity is in the foreground, the service can exit
 		// foreground mode.
-		ctx.bindService(new Intent(ctx, NotificationForegroundService.class), serviceConnection,
+		Log.d(LCAT,serviceConnection.toString());
+		boolean result = ctx.bindService(new Intent(ctx, NotificationForegroundService.class), serviceConnection,
 				Context.BIND_AUTO_CREATE);
+		Log.d(LCAT,"result="+result);
 	}
 
 	@Override
