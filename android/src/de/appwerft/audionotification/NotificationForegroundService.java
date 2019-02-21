@@ -129,6 +129,7 @@ public class NotificationForegroundService extends Service {
 			 * startForeground(NOTIFICATION_ID, getNotification()); }
 			 */
 			notification = getNotification();
+			Log.d(LCAT,notification.toString());
 			startForeground(NOTIFICATION_ID, notification);
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
@@ -155,15 +156,16 @@ public class NotificationForegroundService extends Service {
 		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 		notificationIntent.setComponent(new ComponentName(packageName, className));
+		Log.d(LCAT,packageName + "::"+ className);
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-		// .setSmallIcon(R.drawable.shsl_notification)
+		//builder.setSmallIcon();
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
-				: "");
+				: "TEST");
 		builder.setContentText(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE)
 				? notificationOpts.getString(TiC.PROPERTY_SUBTITLE)
-				: "");
+				: "UNTERTEST");
 		builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.LOCAL)
 				? (Bitmap)notificationOpts.get(Constants.LOGO.LOCAL)
 				: null);
@@ -173,13 +175,13 @@ public class NotificationForegroundService extends Service {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
 					Constants.NOTIFICATION.CHANNELNAME,
-
 					NotificationManager.IMPORTANCE_DEFAULT);
 			// channel.setDescription(NOTIFICATION_CHANNEL_DESC);
 			NotificationManager notificationManager = (NotificationManager) getSystemService(
 					Context.NOTIFICATION_SERVICE);
 			notificationManager.createNotificationChannel(channel);
 		}
+		Log.d(LCAT,notification.toString());
 		return notification;
 	}
 
