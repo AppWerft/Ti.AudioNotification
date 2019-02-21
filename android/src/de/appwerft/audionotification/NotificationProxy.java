@@ -193,14 +193,7 @@ public class NotificationProxy extends KrollProxy {
 	}
 	// Monitors the state of the connection to the service.
 		private ServiceConnection serviceConnection = new ServiceConnection() {
-			@Override
-			public void onBindingDied(ComponentName name) {
-
-			}
-			@Override
-			public void onNullBinding(ComponentName name) {
-
-			}
+			
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				Log.i(LCAT, "ServiceConnection: >>>>  notificationForegroundService connected");
