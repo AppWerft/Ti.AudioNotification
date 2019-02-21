@@ -58,12 +58,15 @@ public class NotificationForegroundService extends Service {
 		ctx = TiApplication.getInstance().getApplicationContext();
 		packageName = TiApplication.getInstance().getPackageName();
 		className = packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName();
-		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+			
 	}
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
+
+		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 	}
 
 	public class LocalBinder extends Binder {
