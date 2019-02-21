@@ -159,7 +159,7 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT,packageName + "::"+ className);
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-		builder.setSmallIcon(R("ic_launcher", "mipmap"));
+		builder.setSmallIcon(R("applogo", "drawable"));
 		//builder.setSmallIcon();
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
