@@ -159,6 +159,7 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT,packageName + "::"+ className);
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
+		builder.setSmallIcon(R("ic_launcher", "mipmap"));
 		//builder.setSmallIcon();
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
@@ -229,5 +230,15 @@ public class NotificationForegroundService extends Service {
 		};
 		Picasso.with(ctx).load(largeIcon).resize(150, 150).into(target);
 }*/
-	
+	/* helper function for safety getting resources */
+	private int R(String name, String type) {
+		int id = 0;
+		try {
+			id = this.getResources().getIdentifier(name, type,
+					this.getPackageName());
+		} catch (Exception e) {
+			return id;
+		}
+		return id;
+}
 }
