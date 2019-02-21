@@ -181,6 +181,7 @@ public class NotificationForegroundService extends Service {
 					Context.NOTIFICATION_SERVICE);
 			notificationManager.createNotificationChannel(channel);
 		}
+		Log.d(LCAT,"Notification created");
 		Log.d(LCAT,notification.toString());
 		return notification;
 	}
