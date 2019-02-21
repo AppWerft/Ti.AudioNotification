@@ -35,18 +35,9 @@ public class NotificationForegroundService extends Service {
 	private final String className;
 	private boolean changingConfiguration;
 
-	private static String contentTitle = null;
-	private String contentText = null;
-	private int priority = 102;
-	private int interval = 10;
-
-	public static final String NOTIFICATION_CHANNEL_ID = "1337";
-	public static final String NOTIFICATION_CHANNEL_NAME = "backgroundradioplayer";
-	private static final int NOTIFICATION_ID = 12345678;
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts;
-	private Notification notification = null;
-
+	
 	public NotificationForegroundService() {
 		super();
 		Log.d(LCAT,"NotificationForegroundService CONSTRUCTOR");
@@ -182,7 +173,7 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT, "Notification created");
 		Log.d(LCAT, notification.toString());
 		
-		notificationManager.notify(NotificationForegroundService.NOTIFICATION_ID, notification);
+		notificationManager.notify(Constants.NOTIFICATION.ID, notification);
 	}
 
 	/**

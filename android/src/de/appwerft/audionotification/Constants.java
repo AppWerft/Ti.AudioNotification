@@ -19,7 +19,7 @@ public class Constants {
 	}
 	public interface NOTIFICATION {
 		public static int FOREGROUND_SERVICE = 101;
-		public static String ID = "121234";
+		public static int ID = 121234;
 		public static String CHANNELID= "2345";
 		public static String CHANNELNAME= "Hoerdatplayer";
 	}
