@@ -121,7 +121,7 @@ public class NotificationForegroundService extends Service {
 		// MainActivity, we
 		// do nothing. Otherwise, we make this service a foreground service.
 		if (!changingConfiguration) {
-			notificationManager.notify(NotificationForegroundService.NOTIFICATION_ID, getNotification());
+		getNotification();
 			
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
@@ -135,7 +135,7 @@ public class NotificationForegroundService extends Service {
 
 		}
 		
-		notificationManager.notify(NotificationForegroundService.NOTIFICATION_ID, getNotification());
+		getNotification();
 
 	}
 
@@ -144,7 +144,7 @@ public class NotificationForegroundService extends Service {
 	}
 
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
-	private Notification getNotification() {
+	private void getNotification() {
 		Log.d(LCAT, "getNotification!");
 		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -176,7 +176,8 @@ public class NotificationForegroundService extends Service {
 		}
 		Log.d(LCAT, "Notification created");
 		Log.d(LCAT, notification.toString());
-		return notification;
+		
+		notificationManager.notify(NotificationForegroundService.NOTIFICATION_ID, notification);
 	}
 
 	/**
