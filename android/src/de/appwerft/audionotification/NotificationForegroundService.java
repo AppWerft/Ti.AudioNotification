@@ -151,8 +151,10 @@ public class NotificationForegroundService extends Service {
 				ctx/*
 					 * , Constants.NOTIFICATION.CHANNELID
 					 */);
-		builder.setSmallIcon(R("applogo", "drawable")).setDefaults(Notification.DEFAULT_ALL)
-				.setPriority(Notification.PRIORITY_HIGH).setWhen(System.currentTimeMillis()).setOngoing(true)
+		builder.setSmallIcon(R("applogo", "drawable"))//
+				.setDefaults(Notification.DEFAULT_ALL)
+				.setPriority(Notification.PRIORITY_HIGH) //
+				.setWhen(System.currentTimeMillis()).setOngoing(true)
 				.setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
 				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE))
 				.setContentIntent(pendingIntent);
