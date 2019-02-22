@@ -94,11 +94,11 @@ public class NotificationForegroundService extends Service {
 	@Override
 	public boolean onUnbind(Intent intent) {
 		if (!changingConfiguration) {
-			Notification notification= getNotification();
-			Log.d(LCAT,(String)notification.getSettingsText());
-		
+			Notification notification = getNotification();
+			Log.d(LCAT, (String) notification.getSettingsText());
+
 			this.startForeground(Constants.NOTIFICATION.ID, notification);
-			
+
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
 		return true; // Ensures onRebind() is called when a client re-binds.
@@ -108,7 +108,7 @@ public class NotificationForegroundService extends Service {
 		notificationOpts = opts;
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)) {
 		}
-		
+
 	}
 
 	public void hideNotification() {
@@ -135,34 +135,34 @@ public class NotificationForegroundService extends Service {
 		activityIntent.setComponent(new ComponentName(packageName,
 				packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
-		Log.d(LCAT,"intents ready, try build Builder ");
-		Log.d(LCAT,notificationOpts.toString());
-		
+		Log.d(LCAT, "intents ready, try build Builder ");
+		Log.d(LCAT, notificationOpts.toString());
+
 		// Building notification:
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-		Log.d(LCAT,"smallIcon: "+R("applogo", "drawable"));
+		Log.d(LCAT, "smallIcon: " + R("applogo", "drawable"));
 		builder.setSmallIcon(R("applogo", "drawable"));
 		builder.setPriority(Notification.PRIORITY_HIGH);
 		builder.setOngoing(true);
-		Log.d(LCAT,"Title");
+		Log.d(LCAT, "Title");
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
 				: "TEST");
-		Log.d(LCAT,"Text");
+		Log.d(LCAT, "Text");
 		builder.setContentText(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE)
 				? notificationOpts.getString(TiC.PROPERTY_SUBTITLE)
 				: "UNTERTEST");
-		Log.d(LCAT,"largeIcon");
+		Log.d(LCAT, "largeIcon");
 		builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.LOCAL)
 				? (Bitmap) notificationOpts.get(Constants.LOGO.LOCAL)
 				: null);
-		Log.d(LCAT,pendingIntent.toString());
+		Log.d(LCAT, pendingIntent.toString());
 		builder.setContentIntent(pendingIntent);
-		Log.d(LCAT, "Notification build => channel for OREO ");
+		Log.d(LCAT, "Notification build => channel for OREO " + Build.VERSION.SDK_INT + " = " + Build.VERSION_CODES.O);
 		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-	//		buildersetChannel(Constants.NOTIFICATION.CHANNELID);
-			Log.d(LCAT,"serChannelId to " + Constants.NOTIFICATION.CHANNELID);
+			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
+			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			builder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
 		builder.setWhen(System.currentTimeMillis());
