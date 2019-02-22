@@ -52,7 +52,7 @@ public class NotificationForegroundService extends Service {
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
 					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
 			// Set the Notification Channel for the Notification Manager.
-	
+			notificationManager.createNotificationChannel(channel);
 		}
 	}
 
