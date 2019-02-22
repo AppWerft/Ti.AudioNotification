@@ -29,7 +29,8 @@ public class NotificationForegroundService extends Service {
 	private static final String LCAT = TiaudionotificationModule.LCAT;
 	public static final String EXTRA_ACTION = "MYACTION";
 	private final Context ctx;
-	
+	private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
+
 	private boolean changingConfiguration;
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts;
@@ -37,7 +38,7 @@ public class NotificationForegroundService extends Service {
 	public NotificationForegroundService() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
-		
+
 	}
 
 	@Override
@@ -45,6 +46,14 @@ public class NotificationForegroundService extends Service {
 		super.onCreate();
 		Log.d(LCAT, "getSystemService inside onCreate");
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		// Android O requires a Notification Channel.
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			// Create the channel for the notification
+			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
+					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
+			// Set the Notification Channel for the Notification Manager.
+			notificationManager.createNotificationChannel(channel);
+		}
 	}
 
 	@Override
@@ -85,7 +94,7 @@ public class NotificationForegroundService extends Service {
 	@Override
 	public boolean onUnbind(Intent intent) {
 		if (!changingConfiguration) {
-			getNotification();
+			 startForeground(Constants.NOTIFICATION.ID, buildNotification());;
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
 		return true; // Ensures onRebind() is called when a client re-binds.
@@ -95,7 +104,7 @@ public class NotificationForegroundService extends Service {
 		notificationOpts = opts;
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)) {
 		}
-		getNotification();
+		buildNotification();
 
 	}
 
@@ -103,13 +112,24 @@ public class NotificationForegroundService extends Service {
 	}
 
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
-	private void getNotification() {
-		Log.d(LCAT, "getNotification!");
-		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
-		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+	private Notification buildNotification() {
+		Log.d(LCAT, "start buildNotification()!");
+
+		Intent intent = new Intent(this, NotificationForegroundService.class);
+		// Extra to help us figure out if we arrived in onStartCommand via the
+		// notification or not.
+		intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
+
+		// The activityIntent calls the app
+		Intent activityIntent = new Intent(Intent.ACTION_MAIN);
+		activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+
 		final String packageName = TiApplication.getInstance().getPackageName();
-		notificationIntent.setComponent(new ComponentName(packageName, packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
-		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
+		activityIntent.setComponent(new ComponentName(packageName,
+				packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
+		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
+
+		// Building notification:
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
 		builder.setSmallIcon(R("applogo", "drawable"));
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
@@ -123,7 +143,7 @@ public class NotificationForegroundService extends Service {
 				: null);
 		builder.setContentIntent(pendingIntent);
 		Notification notification = builder.build();
-		Log.d(LCAT,"Notification build => channel for OREO ");
+		Log.d(LCAT, "Notification build => channel for OREO ");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			Log.d(LCAT, "SDK_VERSION: " + Build.VERSION.CODENAME);
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
@@ -135,7 +155,7 @@ public class NotificationForegroundService extends Service {
 		}
 		Log.d(LCAT, "Notification created");
 		Log.d(LCAT, notification.toString());
-		notificationManager.notify(Constants.NOTIFICATION.ID, notification);
+		return notification;
 	}
 
 	class IncomingHandler extends Handler {
