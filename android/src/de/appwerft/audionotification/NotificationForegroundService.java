@@ -38,6 +38,9 @@ public class NotificationForegroundService extends Service {
 	public NotificationForegroundService() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
+		notificationOpts.put("title", "Title");
+		notificationOpts.put("subtitle", "SubTitle");
+		
 
 	}
 
@@ -155,11 +158,11 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT, "Text");
 		builder.setContentText(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE)
 				? notificationOpts.getString(TiC.PROPERTY_SUBTITLE)
-				: "UNTERTEST");
-		Log.d(LCAT, "largeIcon");
+				: "Ausführliche Botschaft…");
+	/*	Log.d(LCAT, "largeIcon");
 		builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.LOCAL)
 				? (Bitmap) notificationOpts.get(Constants.LOGO.LOCAL)
-				: null);
+				: null);*/
 		Log.d(LCAT, pendingIntent.toString());
 		builder.setContentIntent(pendingIntent);
 		Log.d(LCAT, "Notification build => channel for OREO " + Build.VERSION.SDK_INT + " = " + Build.VERSION_CODES.O);
