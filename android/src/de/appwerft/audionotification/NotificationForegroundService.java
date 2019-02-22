@@ -145,27 +145,17 @@ public class NotificationForegroundService extends Service {
 		activityIntent.setComponent(new ComponentName(packageName,
 				packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
-		Log.d(LCAT, "intents ready, try build NotificationCompat.Builder\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");		
+		Log.d(LCAT, "intents ready, try build NotificationCompat.Builder\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		// Building notification:
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
-				ctx/*, Constants.NOTIFICATION.CHANNELID
+				ctx/*
+					 * , Constants.NOTIFICATION.CHANNELID
 					 */);
-		builder.setSmallIcon(R("applogo", "drawable"));
-		builder.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH)
-				.setWhen(System.currentTimeMillis()).setOngoing(true);
-		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
-				? notificationOpts.getString(TiC.PROPERTY_TITLE)
-				: "TEST");
-		builder.setContentText(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE)
-				? notificationOpts.getString(TiC.PROPERTY_SUBTITLE)
-				: "Ausführliche Botschaft…");
-		/*
-		 * Log.d(LCAT, "largeIcon");
-		 * builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.
-		 * LOCAL) ? (Bitmap) notificationOpts.get(Constants.LOGO.LOCAL) : null);
-		 */
-		Log.d(LCAT, pendingIntent.toString());
-		builder.setContentIntent(pendingIntent);
+		builder.setSmallIcon(R("applogo", "drawable")).setDefaults(Notification.DEFAULT_ALL)
+				.setPriority(Notification.PRIORITY_HIGH).setWhen(System.currentTimeMillis()).setOngoing(true)
+				.setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
+				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE))
+				.setContentIntent(pendingIntent);
 		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
