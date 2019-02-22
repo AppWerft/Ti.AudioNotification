@@ -29,8 +29,7 @@ public class NotificationForegroundService extends Service {
 	private static final String LCAT = TiaudionotificationModule.LCAT;
 	public static final String EXTRA_ACTION = "MYACTION";
 	private final Context ctx;
-	private final String packageName;
-	private final String className;
+	
 	private boolean changingConfiguration;
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts;
@@ -38,8 +37,7 @@ public class NotificationForegroundService extends Service {
 	public NotificationForegroundService() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
-		packageName = TiApplication.getInstance().getPackageName();
-		className = packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName();
+		
 	}
 
 	@Override
@@ -109,7 +107,8 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT, "getNotification!");
 		Intent notificationIntent = new Intent(Intent.ACTION_MAIN);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-		notificationIntent.setComponent(new ComponentName(packageName, className));
+		final String packageName = TiApplication.getInstance().getPackageName();
+		notificationIntent.setComponent(new ComponentName(packageName, packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
 		builder.setSmallIcon(R("applogo", "drawable"));
