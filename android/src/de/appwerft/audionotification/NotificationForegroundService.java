@@ -142,8 +142,7 @@ public class NotificationForegroundService extends Service {
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
 		Log.d(LCAT, "smallIcon: " + R("applogo", "drawable"));
 		builder.setSmallIcon(R("applogo", "drawable"));
-		builder.setPriority(Notification.PRIORITY_HIGH);
-		builder.setOngoing(true);
+		builder.setPriority(Notification.PRIORITY_HIGH).setWhen(System.currentTimeMillis()).setOngoing(true);
 		Log.d(LCAT, "Title");
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
@@ -165,7 +164,7 @@ public class NotificationForegroundService extends Service {
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			builder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-		builder.setWhen(System.currentTimeMillis());
+
 		return builder.build();
 	}
 
