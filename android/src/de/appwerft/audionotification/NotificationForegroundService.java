@@ -100,8 +100,8 @@ public class NotificationForegroundService extends Service {
 	public boolean onUnbind(Intent intent) {
 		if (!changingConfiguration) {
 			Notification notification = getNotification();
-			Log.e(LCAT,"not ready in onUnbind");
-			Log.d(LCAT, (String) notification.getSettingsText());
+			Log.e(LCAT,"notification built in onUnbind");
+			Log.d(LCAT, (String) notification.toString());
 			startForeground(Constants.NOTIFICATION.ID, notification);
 
 		} else
