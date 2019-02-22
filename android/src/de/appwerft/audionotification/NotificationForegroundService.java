@@ -131,7 +131,6 @@ public class NotificationForegroundService extends Service {
 	 * service.
 	 */
 	private Notification getNotification() {
-		Log.d(LCAT, "start getNotification()!");
 
 		Intent intent = new Intent(this, NotificationForegroundService.class);
 		// Extra to help us figure out if we arrived in onStartCommand via the
@@ -146,22 +145,17 @@ public class NotificationForegroundService extends Service {
 		activityIntent.setComponent(new ComponentName(packageName,
 				packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
-		Log.d(LCAT, "intents ready, try build Builder ");
-		Log.d(LCAT, notificationOpts.toString());
-
+		Log.d(LCAT, "intents ready, try build NotificationCompat.Builder\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");		
 		// Building notification:
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
 				ctx/*, Constants.NOTIFICATION.CHANNELID
 					 */);
-		Log.d(LCAT, "smallIcon: " + R("applogo", "drawable"));
-		builder.setContentInfo("Info").setSmallIcon(R("applogo", "drawable"));
+		builder.setSmallIcon(R("applogo", "drawable"));
 		builder.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH)
 				.setWhen(System.currentTimeMillis()).setOngoing(true);
-		Log.d(LCAT, "Title");
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
 				: "TEST");
-		Log.d(LCAT, "Text");
 		builder.setContentText(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE)
 				? notificationOpts.getString(TiC.PROPERTY_SUBTITLE)
 				: "Ausführliche Botschaft…");
@@ -172,7 +166,6 @@ public class NotificationForegroundService extends Service {
 		 */
 		Log.d(LCAT, pendingIntent.toString());
 		builder.setContentIntent(pendingIntent);
-		Log.d(LCAT, "Notification build => channel for OREO " + Build.VERSION.SDK_INT + " = " + Build.VERSION_CODES.O);
 		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
@@ -180,7 +173,6 @@ public class NotificationForegroundService extends Service {
 			builder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
 		Notification notification = builder.build();
-		Log.d(LCAT, "notification ready to show");
 		return notification;
 	}
 
