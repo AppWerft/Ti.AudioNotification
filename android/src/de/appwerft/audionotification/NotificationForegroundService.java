@@ -94,8 +94,11 @@ public class NotificationForegroundService extends Service {
 	@Override
 	public boolean onUnbind(Intent intent) {
 		if (!changingConfiguration) {
-			startForeground(Constants.NOTIFICATION.ID, buildNotification());
-			;
+			Notification notification= createNotification();
+			Log.d(LCAT,(String)notification.getSettingsText());
+		
+			this.startForeground(Constants.NOTIFICATION.ID, notification);
+			
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
 		return true; // Ensures onRebind() is called when a client re-binds.
@@ -116,8 +119,8 @@ public class NotificationForegroundService extends Service {
 	 * Returns the {@link NotificationCompat} used as part of the foreground
 	 * service.
 	 */
-	private Notification buildNotification() {
-		Log.d(LCAT, "start buildNotification()!");
+	private Notification createNotification() {
+		Log.d(LCAT, "start createNotification()!");
 
 		Intent intent = new Intent(this, NotificationForegroundService.class);
 		// Extra to help us figure out if we arrived in onStartCommand via the
