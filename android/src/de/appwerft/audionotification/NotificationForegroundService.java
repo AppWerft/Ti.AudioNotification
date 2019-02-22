@@ -21,7 +21,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import androidx.core.app.NotificationCompat;
-//import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class NotificationForegroundService extends Service {
@@ -133,22 +132,27 @@ public class NotificationForegroundService extends Service {
 		activityIntent.setComponent(new ComponentName(packageName,
 				packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
-
+		Log.d(LCAT,"intents ready, try build Builder ");
+		Log.d(LCAT,notificationOpts.toString());
 		
 		// Building notification:
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
+		Log.d(LCAT,"smallIcon"+R("applogo", "drawable"));
 		builder.setSmallIcon(R("applogo", "drawable"));
+		Log.d(LCAT,"Title");
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
 				: "TEST");
+		Log.d(LCAT,"Text");
 		builder.setContentText(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE)
 				? notificationOpts.getString(TiC.PROPERTY_SUBTITLE)
 				: "UNTERTEST");
+		Log.d(LCAT,"largeIcon");
 		builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.LOCAL)
 				? (Bitmap) notificationOpts.get(Constants.LOGO.LOCAL)
 				: null);
+		Log.d(LCAT,pendingIntent.toString());
 		builder.setContentIntent(pendingIntent);
-
 		Log.d(LCAT, "Notification build => channel for OREO ");
 		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
