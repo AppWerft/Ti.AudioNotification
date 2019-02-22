@@ -26,7 +26,7 @@ import android.util.Log;
 public class NotificationForegroundService extends Service {
 	private static final String PACKAGE_NAME = TiApplication.getInstance().getPackageName();
 	static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
-	private static final String LCAT = TiaudionotificationModule.LCAT+"_S";
+	private static final String LCAT = TiaudionotificationModule.LCAT+"_Service";
 	public static final String EXTRA_ACTION = "MYACTION";
 	private final Context ctx;
 	private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
@@ -168,8 +168,9 @@ public class NotificationForegroundService extends Service {
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			builder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
+		Notification notification = builder.build();
 		Log.d(LCAT, "notification ready to show");
-		return builder.build();
+		return notification;
 	}
 
 	class IncomingHandler extends Handler {

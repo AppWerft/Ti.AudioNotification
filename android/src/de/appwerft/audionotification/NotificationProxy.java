@@ -45,7 +45,7 @@ public class NotificationProxy extends KrollProxy {
 	// A reference to the service used to get location updates.
 	private NotificationForegroundService notificationForegroundService = null;
 	// Standard Debugging variables
-	public static final String LCAT = TiaudionotificationModule.LCAT;
+	public static final String LCAT = TiaudionotificationModule.LCAT+"_Proxy";
 	private Context ctx;
 	// Tracks the bound state of the service.
 	private boolean boundState = false;
