@@ -21,6 +21,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.util.Log;
+import androidx.core.app.NotificationCompat;
 
 public class NotificationForegroundService extends Service {
 	private static final String PACKAGE_NAME = TiApplication.getInstance().getPackageName();
