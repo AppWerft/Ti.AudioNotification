@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/lib/okhttp-3.9.0.jar"/>
 	<classpathentry kind="lib" path="/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/lib/okio-1.13.0.jar"/>
 	<classpathentry kind="lib" path="/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/lib/picasso-2.5.2.jar"/>
+	<classpathentry kind="lib" path="/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/idelibs/androidx.core.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
