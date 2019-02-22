@@ -20,8 +20,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.support.v4.app.NotificationCompat;
+
 import android.util.Log;
+import androidx.core.app.NotificationCompat;
 
 public class NotificationForegroundService extends Service {
 	private static final String PACKAGE_NAME = TiApplication.getInstance().getPackageName();
@@ -150,11 +151,13 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT, notificationOpts.toString());
 
 		// Building notification:
-		final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx,
-				Constants.NOTIFICATION.CHANNELID);
+		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
+				ctx, Constants.NOTIFICATION.CHANNELID
+					 );
 		Log.d(LCAT, "smallIcon: " + R("applogo", "drawable"));
 		builder.setContentInfo("Info").setSmallIcon(R("applogo", "drawable"));
-		builder.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH).setWhen(System.currentTimeMillis()).setOngoing(true);
+		builder.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH)
+				.setWhen(System.currentTimeMillis()).setOngoing(true);
 		Log.d(LCAT, "Title");
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
