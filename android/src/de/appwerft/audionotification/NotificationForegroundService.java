@@ -20,6 +20,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
+import androidx.core.app.NotificationCompat;
 //import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -151,6 +152,7 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT, "Notification build => channel for OREO ");
 		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+	//		buildersetChannel(Constants.NOTIFICATION.CHANNELID);
 			builder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
 		return builder.build();
