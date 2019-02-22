@@ -164,7 +164,7 @@ public class NotificationForegroundService extends Service {
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			builder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-Log.d(LCAT,"notification ready to show");
+		Log.d(LCAT, "notification ready to show");
 		return builder.build();
 	}
 
