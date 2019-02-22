@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-
+import android.support.v4.app.*;
 import android.util.Log;
 
 public class NotificationForegroundService extends Service {
@@ -151,8 +151,8 @@ public class NotificationForegroundService extends Service {
 
 		// Building notification:
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
-				ctx, Constants.NOTIFICATION.CHANNELID
-					 );
+				ctx/*, Constants.NOTIFICATION.CHANNELID
+					 */);
 		Log.d(LCAT, "smallIcon: " + R("applogo", "drawable"));
 		builder.setContentInfo("Info").setSmallIcon(R("applogo", "drawable"));
 		builder.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH)
