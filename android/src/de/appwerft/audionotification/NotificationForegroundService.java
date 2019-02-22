@@ -145,7 +145,9 @@ public class NotificationForegroundService extends Service {
 				ctx/*
 					 * , Constants.NOTIFICATION.CHANNELID
 					 */);
-		notificationBuilder.setSmallIcon(R("applogo", "drawable"))//
+		notificationBuilder //
+				.setAutoCancel(true)
+				.setSmallIcon(R("applogo", "drawable"))//
 				.setDefaults(Notification.DEFAULT_ALL)
 				.setPriority(Notification.PRIORITY_HIGH) //
 				.setWhen(System.currentTimeMillis()).setOngoing(true)
@@ -159,6 +161,7 @@ public class NotificationForegroundService extends Service {
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
 		Notification notification = notificationBuilder.build();
+		notificationManager.notify(/*notification id*/1, notificationBuilder.build());
 		return notification;
 	}
 
