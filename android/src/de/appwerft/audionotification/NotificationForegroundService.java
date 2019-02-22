@@ -51,16 +51,10 @@ public class NotificationForegroundService extends Service {
 		// Android O requires a Notification Channel.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// Create the channel for the notification
-			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
-					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
-			channel.setDescription("Channel description");
-			channel.enableLights(true);
-			channel.setLightColor(Color.RED);
-			channel.setVibrationPattern(new long[] { 0, 1000, 500, 1000 });
-			channel.enableVibration(true);
-			// Set the Notification Channel for the Notification Manager.
-			notificationManager.createNotificationChannel(channel);
-			Log.d(LCAT, "NotificationChannel added to NotificationManager");
+			NotificationChannel notificationChannel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
+					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_MAX);
+			notificationChannel.setDescription("HörDat");
+			notificationManager.createNotificationChannel(notificationChannel);
 		}
 	}
 
@@ -147,11 +141,11 @@ public class NotificationForegroundService extends Service {
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
 		Log.d(LCAT, "intents ready, try build NotificationCompat.Builder\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		// Building notification:
-		final NotificationCompat.Builder builder = new NotificationCompat.Builder(
+		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				ctx/*
 					 * , Constants.NOTIFICATION.CHANNELID
 					 */);
-		builder.setSmallIcon(R("applogo", "drawable"))//
+		notificationBuilder.setSmallIcon(R("applogo", "drawable"))//
 				.setDefaults(Notification.DEFAULT_ALL)
 				.setPriority(Notification.PRIORITY_HIGH) //
 				.setWhen(System.currentTimeMillis()).setOngoing(true)
@@ -162,9 +156,9 @@ public class NotificationForegroundService extends Service {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
-			builder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
+			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-		Notification notification = builder.build();
+		Notification notification = notificationBuilder.build();
 		return notification;
 	}
 
