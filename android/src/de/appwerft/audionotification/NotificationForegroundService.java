@@ -33,7 +33,7 @@ public class NotificationForegroundService extends Service {
 
 	private boolean changingConfiguration;
 	private NotificationManager notificationManager;
-	private KrollDict notificationOpts;
+	private KrollDict notificationOpts = new KrollDict();
 
 	public NotificationForegroundService() {
 		super();
