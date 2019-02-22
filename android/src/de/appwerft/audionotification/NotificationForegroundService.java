@@ -26,7 +26,7 @@ import android.util.Log;
 public class NotificationForegroundService extends Service {
 	private static final String PACKAGE_NAME = TiApplication.getInstance().getPackageName();
 	static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
-	private static final String LCAT = TiaudionotificationModule.LCAT;
+	private static final String LCAT = TiaudionotificationModule.LCAT+"_S";
 	public static final String EXTRA_ACTION = "MYACTION";
 	private final Context ctx;
 	private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
@@ -53,39 +53,44 @@ public class NotificationForegroundService extends Service {
 					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
 			// Set the Notification Channel for the Notification Manager.
 			notificationManager.createNotificationChannel(channel);
+			Log.d(LCAT,"NotificationChannel added to NotificationManager");
 		}
 	}
 
 	@Override
 	public IBinder onBind(Intent intent) {
+		Log.d(LCAT, "onBind");
 		stopForeground(true);
 		changingConfiguration = false;
-		Log.d(LCAT, "onBind");
 		return binder;// messenger.getBinder();
 	}
 
 	private final IBinder binder = new LocalBinder();
 
 	public class LocalBinder extends Binder {
+		
 		NotificationForegroundService getService() {
-			Log.d(LCAT, "LocalBinder");
+			Log.d(LCAT, "NotificationForegroundService");
 			return NotificationForegroundService.this;
 		}
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		Log.e(LCAT,"onStartCommand");
 		return START_STICKY;
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
+		Log.e(LCAT,"onConfigurationChanged");
 		changingConfiguration = true;
 	}
 
 	@Override
 	public void onRebind(Intent intent) {
+		Log.e(LCAT,"onRebind");
 		stopForeground(true);
 		changingConfiguration = false;
 		super.onRebind(intent);
@@ -96,7 +101,6 @@ public class NotificationForegroundService extends Service {
 		if (!changingConfiguration) {
 			Notification notification = getNotification();
 			Log.d(LCAT, (String) notification.getSettingsText());
-
 			this.startForeground(Constants.NOTIFICATION.ID, notification);
 
 		} else
