@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
-import android.support.v4.app.NotificationCompat;
+//import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 public class NotificationForegroundService extends Service {
@@ -94,7 +94,8 @@ public class NotificationForegroundService extends Service {
 	@Override
 	public boolean onUnbind(Intent intent) {
 		if (!changingConfiguration) {
-			 startForeground(Constants.NOTIFICATION.ID, buildNotification());;
+			startForeground(Constants.NOTIFICATION.ID, buildNotification());
+			;
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
 		return true; // Ensures onRebind() is called when a client re-binds.
@@ -104,14 +105,17 @@ public class NotificationForegroundService extends Service {
 		notificationOpts = opts;
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)) {
 		}
-		buildNotification();
-
+		
 	}
 
 	public void hideNotification() {
 	}
 
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
+	/**
+	 * Returns the {@link NotificationCompat} used as part of the foreground
+	 * service.
+	 */
 	private Notification buildNotification() {
 		Log.d(LCAT, "start buildNotification()!");
 
@@ -129,8 +133,9 @@ public class NotificationForegroundService extends Service {
 				packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
 		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
 
+		
 		// Building notification:
-		NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
+		final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
 		builder.setSmallIcon(R("applogo", "drawable"));
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
@@ -142,20 +147,13 @@ public class NotificationForegroundService extends Service {
 				? (Bitmap) notificationOpts.get(Constants.LOGO.LOCAL)
 				: null);
 		builder.setContentIntent(pendingIntent);
-		Notification notification = builder.build();
+
 		Log.d(LCAT, "Notification build => channel for OREO ");
+		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			Log.d(LCAT, "SDK_VERSION: " + Build.VERSION.CODENAME);
-			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
-					Constants.NOTIFICATION.CHANNELNAME, NotificationManager.IMPORTANCE_DEFAULT);
-			channel.setDescription(Constants.NOTIFICATION.CHANNEL_DESC);
-			NotificationManager notificationManager = (NotificationManager) getSystemService(
-					Context.NOTIFICATION_SERVICE);
-			notificationManager.createNotificationChannel(channel);
+			builder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-		Log.d(LCAT, "Notification created");
-		Log.d(LCAT, notification.toString());
-		return notification;
+		return builder.build();
 	}
 
 	class IncomingHandler extends Handler {
