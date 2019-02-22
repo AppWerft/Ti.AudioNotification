@@ -13,7 +13,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -26,7 +26,7 @@ import android.util.Log;
 public class NotificationForegroundService extends Service {
 	private static final String PACKAGE_NAME = TiApplication.getInstance().getPackageName();
 	static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
-	private static final String LCAT = TiaudionotificationModule.LCAT+"_Service";
+	private static final String LCAT = TiaudionotificationModule.LCAT + "_Service";
 	public static final String EXTRA_ACTION = "MYACTION";
 	private final Context ctx;
 	private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
@@ -40,7 +40,6 @@ public class NotificationForegroundService extends Service {
 		ctx = TiApplication.getInstance().getApplicationContext();
 		notificationOpts.put("title", "Title");
 		notificationOpts.put("subtitle", "SubTitle");
-		
 
 	}
 
@@ -54,9 +53,14 @@ public class NotificationForegroundService extends Service {
 			// Create the channel for the notification
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
 					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
+			channel.setDescription("Channel description");
+			channel.enableLights(true);
+			channel.setLightColor(Color.RED);
+			channel.setVibrationPattern(new long[] { 0, 1000, 500, 1000 });
+			channel.enableVibration(true);
 			// Set the Notification Channel for the Notification Manager.
 			notificationManager.createNotificationChannel(channel);
-			Log.d(LCAT,"NotificationChannel added to NotificationManager");
+			Log.d(LCAT, "NotificationChannel added to NotificationManager");
 		}
 	}
 
@@ -71,7 +75,7 @@ public class NotificationForegroundService extends Service {
 	private final IBinder binder = new LocalBinder();
 
 	public class LocalBinder extends Binder {
-		
+
 		NotificationForegroundService getService() {
 			Log.d(LCAT, "NotificationForegroundService");
 			return NotificationForegroundService.this;
@@ -80,20 +84,20 @@ public class NotificationForegroundService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.e(LCAT,"onStartCommand");
+		Log.e(LCAT, "onStartCommand");
 		return START_STICKY;
 	}
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		Log.e(LCAT,"onConfigurationChanged");
+		Log.e(LCAT, "onConfigurationChanged");
 		changingConfiguration = true;
 	}
 
 	@Override
 	public void onRebind(Intent intent) {
-		Log.e(LCAT,"onRebind");
+		Log.e(LCAT, "onRebind");
 		stopForeground(true);
 		changingConfiguration = false;
 		super.onRebind(intent);
@@ -146,10 +150,11 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT, notificationOpts.toString());
 
 		// Building notification:
-		final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
+		final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx,
+				Constants.NOTIFICATION.CHANNELID);
 		Log.d(LCAT, "smallIcon: " + R("applogo", "drawable"));
-		builder.setSmallIcon(R("applogo", "drawable"));
-		builder.setPriority(Notification.PRIORITY_HIGH).setWhen(System.currentTimeMillis()).setOngoing(true);
+		builder.setContentInfo("Info").setSmallIcon(R("applogo", "drawable"));
+		builder.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH).setWhen(System.currentTimeMillis()).setOngoing(true);
 		Log.d(LCAT, "Title");
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
@@ -158,10 +163,11 @@ public class NotificationForegroundService extends Service {
 		builder.setContentText(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE)
 				? notificationOpts.getString(TiC.PROPERTY_SUBTITLE)
 				: "Ausführliche Botschaft…");
-	/*	Log.d(LCAT, "largeIcon");
-		builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.LOCAL)
-				? (Bitmap) notificationOpts.get(Constants.LOGO.LOCAL)
-				: null);*/
+		/*
+		 * Log.d(LCAT, "largeIcon");
+		 * builder.setLargeIcon(notificationOpts.containsKeyAndNotNull(Constants.LOGO.
+		 * LOCAL) ? (Bitmap) notificationOpts.get(Constants.LOGO.LOCAL) : null);
+		 */
 		Log.d(LCAT, pendingIntent.toString());
 		builder.setContentIntent(pendingIntent);
 		Log.d(LCAT, "Notification build => channel for OREO " + Build.VERSION.SDK_INT + " = " + Build.VERSION_CODES.O);
