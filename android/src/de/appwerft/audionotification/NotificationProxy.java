@@ -203,7 +203,7 @@ public class NotificationProxy extends KrollProxy {
 				notificationForegroundService = ((NotificationForegroundService.LocalBinder) service).getService();
 
 				// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
-				// messenger = new Messenger(service);
+				 messenger = new Messenger(service);
 				boundState = true;
 			}
 

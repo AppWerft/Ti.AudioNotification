@@ -50,6 +50,7 @@ public class TiaudionotificationModule extends KrollModule {
 	public static final int NOTIFICATION_IMPORTANCE_MIN = NotificationManager.IMPORTANCE_MIN;
 	@Kroll.constant
 	public static final int NOTIFICATION_IMPORTANCE_MAX = NotificationManager.IMPORTANCE_MAX;
+	
 	public TiaudionotificationModule() {
 		super();
 	}

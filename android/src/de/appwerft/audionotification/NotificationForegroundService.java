@@ -52,7 +52,7 @@ public class NotificationForegroundService extends Service {
 			NotificationChannel channel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
 					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_DEFAULT);
 			// Set the Notification Channel for the Notification Manager.
-			notificationManager.createNotificationChannel(channel);
+			notificationManager.getNotificationChannel(channel);
 		}
 	}
 
@@ -94,7 +94,7 @@ public class NotificationForegroundService extends Service {
 	@Override
 	public boolean onUnbind(Intent intent) {
 		if (!changingConfiguration) {
-			Notification notification= createNotification();
+			Notification notification= getNotification();
 			Log.d(LCAT,(String)notification.getSettingsText());
 		
 			this.startForeground(Constants.NOTIFICATION.ID, notification);
@@ -119,8 +119,8 @@ public class NotificationForegroundService extends Service {
 	 * Returns the {@link NotificationCompat} used as part of the foreground
 	 * service.
 	 */
-	private Notification createNotification() {
-		Log.d(LCAT, "start createNotification()!");
+	private Notification getNotification() {
+		Log.d(LCAT, "start getNotification()!");
 
 		Intent intent = new Intent(this, NotificationForegroundService.class);
 		// Extra to help us figure out if we arrived in onStartCommand via the
@@ -140,8 +140,10 @@ public class NotificationForegroundService extends Service {
 		
 		// Building notification:
 		final NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
-		Log.d(LCAT,"smallIcon"+R("applogo", "drawable"));
+		Log.d(LCAT,"smallIcon: "+R("applogo", "drawable"));
 		builder.setSmallIcon(R("applogo", "drawable"));
+		builder.setPriority(Notification.PRIORITY_HIGH);
+		builder.setOngoing(true);
 		Log.d(LCAT,"Title");
 		builder.setContentTitle(notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)
 				? notificationOpts.getString(TiC.PROPERTY_TITLE)
@@ -160,8 +162,10 @@ public class NotificationForegroundService extends Service {
 		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 	//		buildersetChannel(Constants.NOTIFICATION.CHANNELID);
+			Log.d(LCAT,"serChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			builder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
+		builder.setWhen(System.currentTimeMillis());
 		return builder.build();
 	}
 
