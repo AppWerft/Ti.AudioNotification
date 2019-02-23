@@ -57,11 +57,12 @@ public class NotificationForegroundService extends Service {
 			NotificationChannel notificationChannel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
 					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_MAX);
 			notificationChannel.setDescription("HörDat");
+			notificationChannel.setVibrationPattern(new long[] { 0 });
+			notificationChannel.enableVibration(true);
 			notificationManager.createNotificationChannel(notificationChannel);
 		}
 	}
-	
-	
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -70,19 +71,19 @@ public class NotificationForegroundService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.e(LCAT, "onStartCommand with action " + intent.getAction());
-		if (intent.getAction().equals("CREATE")|| intent.getAction().equals("UPDATE")) {
-			Log.d(LCAT,"Intent CREATE ");
+		if (intent.getAction().equals("CREATE") || intent.getAction().equals("UPDATE")) {
+			Log.d(LCAT, "Intent CREATE ");
 			if (intent.hasExtra(TiC.PROPERTY_TITLE)) {
-				notificationOpts.put(TiC.PROPERTY_TITLE,intent.getStringExtra(TiC.PROPERTY_TITLE));
+				notificationOpts.put(TiC.PROPERTY_TITLE, intent.getStringExtra(TiC.PROPERTY_TITLE));
 			}
 			if (intent.hasExtra(TiC.PROPERTY_SUBTITLE)) {
-				notificationOpts.put(TiC.PROPERTY_SUBTITLE,intent.getStringExtra(TiC.PROPERTY_SUBTITLE));
+				notificationOpts.put(TiC.PROPERTY_SUBTITLE, intent.getStringExtra(TiC.PROPERTY_SUBTITLE));
 			}
 			if (intent.hasExtra(TiC.PROPERTY_ICON)) {
-				notificationOpts.put(TiC.PROPERTY_ICON,intent.getStringExtra(TiC.PROPERTY_ICON));
+				notificationOpts.put(TiC.PROPERTY_ICON, intent.getStringExtra(TiC.PROPERTY_ICON));
 			}
- 		}
-		Log.d(LCAT,notificationOpts.toString());
+		}
+		Log.d(LCAT, notificationOpts.toString());
 		getNotification();
 		return START_STICKY;
 	}
@@ -93,7 +94,7 @@ public class NotificationForegroundService extends Service {
 	 * service.
 	 */
 	private Notification getNotification() {
-		
+
 		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				ctx/*
 					 * , Constants.NOTIFICATION.CHANNELID
