@@ -60,7 +60,8 @@ public class NotificationForegroundService extends Service {
 			notificationManager.createNotificationChannel(notificationChannel);
 		}
 	}
-
+	
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -69,7 +70,20 @@ public class NotificationForegroundService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.e(LCAT, "onStartCommand");
-		HashMap<String, Object> notificationOpts = (HashMap<String, Object>) intent.getSerializableExtra("DICT");
+		if (intent.getAction().equals("CREATE")) {
+			if (intent.hasExtra(TiC.PROPERTY_TITLE)) {
+				notificationOpts.put(TiC.PROPERTY_TITLE,intent.getStringExtra(TiC.PROPERTY_TITLE));
+			}
+			if (intent.hasExtra(TiC.PROPERTY_SUBTITLE)) {
+				notificationOpts.put(TiC.PROPERTY_SUBTITLE,intent.getStringExtra(TiC.PROPERTY_SUBTITLE));
+			}
+			if (intent.hasExtra(TiC.PROPERTY_ICON)) {
+				notificationOpts.put(TiC.PROPERTY_ICON,intent.getStringExtra(TiC.PROPERTY_ICON));
+			}
+ 		}
+		if (intent.getAction().equals("UPDATE")) {}
+		
+		
 		getNotification();
 		return START_STICKY;
 	}

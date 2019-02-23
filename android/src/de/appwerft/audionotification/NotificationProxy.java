@@ -1,11 +1,8 @@
 package de.appwerft.audionotification;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import org.appcelerator.kroll.KrollDict;
-import org.appcelerator.kroll.KrollFunction;
-import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.KrollProxy;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
@@ -15,30 +12,11 @@ import org.appcelerator.titanium.io.TiBaseFile;
 import org.appcelerator.titanium.io.TiFileFactory;
 import org.appcelerator.titanium.util.TiUIHelper;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-import android.Manifest;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Location;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
 
 @Kroll.proxy(creatableInModule = TiaudionotificationModule.class)
 public class NotificationProxy extends KrollProxy {
@@ -50,6 +28,7 @@ public class NotificationProxy extends KrollProxy {
 	// Tracks the bound state of the service.
 
 	private KrollDict notificationOpts = new KrollDict();
+	private Bitmap image=null;
 
 	public NotificationProxy() {
 		super();
@@ -73,16 +52,49 @@ public class NotificationProxy extends KrollProxy {
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_ICON))
 			notificationOpts.put(TiC.PROPERTY_ICON, opts.getString(TiC.PROPERTY_ICON));
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE))
-			notificationOpts.put(TiC.PROPERTY_IMAGE, loadImage(opts.getString(TiC.PROPERTY_IMAGE)));
+			image = loadImage(opts.getString(TiC.PROPERTY_IMAGE));
 		super.handleCreationDict(opts);
 	}
 
 	@Kroll.method
 	public void show() {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		serviceIntent.putExtra("DICT", notificationOpts);
+		serviceIntent.putExtra(TiC.PROPERTY_TITLE, notificationOpts.getString(TiC.PROPERTY_TITLE));
+		serviceIntent.putExtra(TiC.PROPERTY_SUBTITLE, notificationOpts.getString(TiC.PROPERTY_SUBTITLE));
+		serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
+		serviceIntent.putExtra(TiC.PROPERTY_IMAGE,image);
 		serviceIntent.putExtra("ACTION", "CREATE");
-		Log.d(LCAT, notificationOpts.toString());
+		ctx.startForegroundService(serviceIntent);
+		Log.d("LCAT", "startForegroundService(serviceIntent)");
+	}
+	@Kroll.method
+	public void remove() {
+		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		serviceIntent.putExtra("ACTION", "REMOVE");
+		ctx.startForegroundService(serviceIntent);
+		Log.d("LCAT", "startForegroundService(serviceIntent)");
+	}
+	@Kroll.method
+	public void setTitle(String title) {
+		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		serviceIntent.putExtra(TiC.PROPERTY_TITLE, title);
+		serviceIntent.putExtra("ACTION", "UPDATE");
+		ctx.startForegroundService(serviceIntent);
+		Log.d("LCAT", "startForegroundService(serviceIntent)");
+	}
+	@Kroll.method
+	public void setSubtitle(String subtitle) {
+		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		serviceIntent.putExtra(TiC.PROPERTY_SUBTITLE, subtitle);
+		serviceIntent.putExtra("ACTION", "UPDATE");
+		ctx.startForegroundService(serviceIntent);
+		Log.d("LCAT", "startForegroundService(serviceIntent)");
+	}
+	@Kroll.method
+	public void setImage(String path) {
+		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		serviceIntent.putExtra(TiC.PROPERTY_IMAGE, loadImage(path));
+		serviceIntent.putExtra("ACTION", "UPDATE");
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
@@ -98,6 +110,8 @@ public class NotificationProxy extends KrollProxy {
 		}
 		return bitmap;
 	}
+	
+
 
 	@Kroll.method
 	public void hide() {
@@ -114,17 +128,6 @@ public class NotificationProxy extends KrollProxy {
 	public void onStart(Activity activity) {
 		super.onStart(activity);
 		Log.d(LCAT, ">>>>>>> onStart called");
-		// Bind to the service. If the service is in foreground mode, this
-		// signals to the service
-		// that since this activity is in the foreground, the service can exit
-		// foreground mode.
-		// Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		// if (!ctx.bindService(serviceIntent, serviceConnection,
-		// Context.BIND_AUTO_CREATE))
-		// Log.e(LCAT,
-		// "cannot bind service, maybe you forgot to add the service to
-		// manifest\n<service
-		// android:name=\"de.appwerft.audionotification.NotificationForegroundService\"/>");
 	}
 
 	@Override

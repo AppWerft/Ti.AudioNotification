@@ -31,8 +31,12 @@ private:
 	static v8::Persistent<v8::FunctionTemplate> proxyTemplate;
 
 	// Methods -----------------------------------------------------------
-	static void show(const v8::FunctionCallbackInfo<v8::Value>&);
 	static void hide(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void show(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void setTitle(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void setSubtitle(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void remove(const v8::FunctionCallbackInfo<v8::Value>&);
+	static void setImage(const v8::FunctionCallbackInfo<v8::Value>&);
 
 	// Dynamic property accessors ----------------------------------------
 
