@@ -60,69 +60,60 @@ public class NotificationForegroundService extends Service {
 			notificationManager.createNotificationChannel(notificationChannel);
 		}
 	}
-	
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
 
-	
-
-	
-
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.e(LCAT, "onStartCommand");
-		HashMap<String, Object> notificationOpts = (HashMap<String, Object>)intent.getSerializableExtra("DICT");
+		HashMap<String, Object> notificationOpts = (HashMap<String, Object>) intent.getSerializableExtra("DICT");
 		getNotification();
 		return START_STICKY;
 	}
 
-		
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
 	/**
 	 * Returns the {@link NotificationCompat} used as part of the foreground
 	 * service.
 	 */
 	private Notification getNotification() {
-			// The activityIntent calls the app
-		Intent activityIntent = new Intent(Intent.ACTION_MAIN);
-		//activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
 		
-		final String packageName = TiApplication.getInstance().getPackageName();
-		activityIntent.setComponent(new ComponentName(packageName,
-				packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
-		Log.d(LCAT, "intents ready, try build NotificationCompat.Builder\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-		// Building notification:
 		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				ctx/*
 					 * , Constants.NOTIFICATION.CHANNELID
 					 */);
 		notificationBuilder //
-				.setAutoCancel(true)
-				.setSmallIcon(R("applogo", "drawable"))//
-				.setDefaults(Notification.DEFAULT_ALL)
-				.setPriority(Notification.PRIORITY_HIGH) //
+				.setAutoCancel(true).setSmallIcon(R("applogo", "drawable"))//
+				.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH) //
 				.setWhen(System.currentTimeMillis()).setOngoing(true)
 				.setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
-				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE))
-				.setContentIntent(pendingIntent);
+				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(getPendingIntent());
 		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-		
+
 		Notification notification = notificationBuilder.build();
-		//notificationManager.notify(Constants.NOTIFICATION.ID, notification);
+		// notificationManager.notify(Constants.NOTIFICATION.ID, notification);
 		startForeground(Constants.NOTIFICATION.ID, notification);
 		return notification;
 	}
 
-	
-
+	private PendingIntent getPendingIntent() {
+		final String packageName = TiApplication.getInstance().getPackageName();
+		final String className = packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName();
+		Intent activityIntent = new Intent(Intent.ACTION_MAIN);
+		activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+		activityIntent.setComponent(new ComponentName(packageName, className));
+		PendingIntent activityPendingIntent = PendingIntent.getActivity(ctx, 1, activityIntent,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		return activityPendingIntent;
+	}
 
 	private int R(String name, String type) {
 		int id = 0;
