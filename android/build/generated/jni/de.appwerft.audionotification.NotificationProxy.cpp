@@ -86,6 +86,7 @@ Local<FunctionTemplate> NotificationProxy::getProxyTemplate(Isolate* isolate)
 		FunctionTemplate::New(isolate, titanium::Proxy::inherit<NotificationProxy>));
 
 	// Method bindings --------------------------------------------------------
+	titanium::SetProtoMethod(isolate, t, "show", NotificationProxy::show);
 	titanium::SetProtoMethod(isolate, t, "hide", NotificationProxy::hide);
 
 	Local<ObjectTemplate> prototypeTemplate = t->PrototypeTemplate();
@@ -105,6 +106,66 @@ Local<FunctionTemplate> NotificationProxy::getProxyTemplate(Isolate* isolate)
 }
 
 // Methods --------------------------------------------------------------------
+void NotificationProxy::show(const FunctionCallbackInfo<Value>& args)
+{
+	LOGD(TAG, "show()");
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		titanium::JSException::GetJNIEnvironmentError(isolate);
+		return;
+	}
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(NotificationProxy::javaClass, "show", "()V");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'show' with signature '()V'";
+			LOGE(TAG, error);
+				titanium::JSException::Error(isolate, error);
+				return;
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		args.GetReturnValue().Set(Undefined(isolate));
+		return;
+	}
+
+	jvalue* jArguments = 0;
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	env->CallVoidMethodA(javaProxy, methodID, jArguments);
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+	}
+
+
+
+
+	args.GetReturnValue().Set(v8::Undefined(isolate));
+
+}
 void NotificationProxy::hide(const FunctionCallbackInfo<Value>& args)
 {
 	LOGD(TAG, "hide()");

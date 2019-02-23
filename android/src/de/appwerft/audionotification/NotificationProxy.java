@@ -45,15 +45,11 @@ public class NotificationProxy extends KrollProxy {
 	// A reference to the service used to get location updates.
 	private NotificationForegroundService notificationForegroundService = null;
 	// Standard Debugging variables
-	public static final String LCAT = TiaudionotificationModule.LCAT+"_Proxy";
+	public static final String LCAT = TiaudionotificationModule.LCAT + "_Proxy";
 	private Context ctx;
 	// Tracks the bound state of the service.
-		
+
 	private KrollDict notificationOpts = new KrollDict();
-
-	
-
-	
 
 	public NotificationProxy() {
 		super();
@@ -66,9 +62,10 @@ public class NotificationProxy extends KrollProxy {
 
 	}
 
+	// Handle creation options
 	@Override
 	public void handleCreationDict(KrollDict opts) {
-		Log.d(LCAT,"handleCreationDict: " + opts.toString());
+		Log.d(LCAT, "handleCreationDict: " + opts.toString());
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE))
 			notificationOpts.put(TiC.PROPERTY_TITLE, opts.getString(TiC.PROPERTY_TITLE));
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE))
@@ -77,17 +74,19 @@ public class NotificationProxy extends KrollProxy {
 			notificationOpts.put(TiC.PROPERTY_ICON, opts.getString(TiC.PROPERTY_ICON));
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE))
 			notificationOpts.put(TiC.PROPERTY_IMAGE, loadImage(opts.getString(TiC.PROPERTY_IMAGE)));
-		
-		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		serviceIntent.putExtra("DICT", notificationOpts);
-		serviceIntent.putExtra("ACTION", "CREATE");
-		Log.d(LCAT,notificationOpts.toString());
-		ctx.startForegroundService(serviceIntent);
-		Log.d("LCAT", "startForegroundService(serviceIntent)");
 		super.handleCreationDict(opts);
 	}
 
-	
+	@Kroll.method
+	public void show() {
+		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		serviceIntent.putExtra("DICT", notificationOpts);
+		serviceIntent.putExtra("ACTION", "CREATE");
+		Log.d(LCAT, notificationOpts.toString());
+		ctx.startForegroundService(serviceIntent);
+		Log.d("LCAT", "startForegroundService(serviceIntent)");
+	}
+
 	private Bitmap loadImage(String imageName) {
 		Bitmap bitmap = null;
 		try {
@@ -100,8 +99,6 @@ public class NotificationProxy extends KrollProxy {
 		return bitmap;
 	}
 
-	
-
 	@Kroll.method
 	public void hide() {
 
@@ -113,9 +110,6 @@ public class NotificationProxy extends KrollProxy {
 		return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
 	}
 
-	
-	
-	
 	@Override
 	public void onStart(Activity activity) {
 		super.onStart(activity);
@@ -124,10 +118,13 @@ public class NotificationProxy extends KrollProxy {
 		// signals to the service
 		// that since this activity is in the foreground, the service can exit
 		// foreground mode.
-		//Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		//if (!ctx.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE))
-		//	Log.e(LCAT,
-		//			"cannot bind service, maybe you forgot to add the service to manifest\n<service android:name=\"de.appwerft.audionotification.NotificationForegroundService\"/>");
+		// Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		// if (!ctx.bindService(serviceIntent, serviceConnection,
+		// Context.BIND_AUTO_CREATE))
+		// Log.e(LCAT,
+		// "cannot bind service, maybe you forgot to add the service to
+		// manifest\n<service
+		// android:name=\"de.appwerft.audionotification.NotificationForegroundService\"/>");
 	}
 
 	@Override
@@ -139,14 +136,14 @@ public class NotificationProxy extends KrollProxy {
 	@Override
 	public void onPause(Activity activity) {
 		Log.d(LCAT, "<<<<<< onPause called");
-		//LocalBroadcastManager.getInstance(ctx).unregisterReceiver(receiver);
+		// LocalBroadcastManager.getInstance(ctx).unregisterReceiver(receiver);
 		super.onPause(activity);
 	}
 
 	@Override
 	public void onStop(Activity activity) {
 		Log.d(LCAT, "<<<<<< onStop called");
-		
+
 		super.onStop(activity);
 	}
 
@@ -155,5 +152,5 @@ public class NotificationProxy extends KrollProxy {
 		Log.d(LCAT, "<<<<<< onDestroy called");
 		super.onDestroy(activity);
 	}
-	
+
 }
