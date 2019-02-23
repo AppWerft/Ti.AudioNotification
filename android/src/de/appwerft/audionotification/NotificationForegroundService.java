@@ -70,7 +70,7 @@ public class NotificationForegroundService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.e(LCAT, "onStartCommand with action " + intent.getAction());
-		if (intent.getAction().equals("CREATE")) {
+		if (intent.getAction().equals("CREATE")|| intent.getAction().equals("UPDATE")) {
 			Log.d(LCAT,"Intent CREATE ");
 			if (intent.hasExtra(TiC.PROPERTY_TITLE)) {
 				notificationOpts.put(TiC.PROPERTY_TITLE,intent.getStringExtra(TiC.PROPERTY_TITLE));
@@ -82,10 +82,6 @@ public class NotificationForegroundService extends Service {
 				notificationOpts.put(TiC.PROPERTY_ICON,intent.getStringExtra(TiC.PROPERTY_ICON));
 			}
  		}
-		if (intent.getAction().equals("UPDATE")) {
-			Log.d(LCAT,"Intent UPDATE ");
-		}
-		
 		Log.d(LCAT,notificationOpts.toString());
 		getNotification();
 		return START_STICKY;
