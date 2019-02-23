@@ -121,19 +121,7 @@ public class NotificationForegroundService extends Service {
 		return notification;
 	}
 
-	class IncomingHandler extends Handler {
-		@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-			case Constants.NOTIFICATION.FOREGROUND_SERVICE:
-				KrollDict opts = (KrollDict) msg.obj;
-				updateNotification(opts);
-				break;
-			default:
-				super.handleMessage(msg);
-			}
-		}
-	}
+	
 
 
 	private int R(String name, String type) {
