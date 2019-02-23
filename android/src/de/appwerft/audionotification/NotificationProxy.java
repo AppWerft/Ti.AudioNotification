@@ -39,7 +39,6 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import de.appwerft.audionotification.NotificationForegroundService.LocalBinder;
 
 @Kroll.proxy(creatableInModule = TiaudionotificationModule.class)
 public class NotificationProxy extends KrollProxy {
