@@ -31,10 +31,6 @@ public class NotificationForegroundService extends Service {
 	private static final String LCAT = TiaudionotificationModule.LCAT + "_Service";
 	public static final String EXTRA_ACTION = "MYACTION";
 	private final Context ctx;
-	private IBinder binder;
-	private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
-
-	private boolean changingConfiguration;
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts = new KrollDict();
 
@@ -43,7 +39,6 @@ public class NotificationForegroundService extends Service {
 		ctx = TiApplication.getInstance().getApplicationContext();
 		notificationOpts.put("title", "Title");
 		notificationOpts.put("subtitle", "SubTitle");
-
 	}
 
 	@Override
@@ -83,6 +78,9 @@ public class NotificationForegroundService extends Service {
 				notificationOpts.put(TiC.PROPERTY_ICON, intent.getStringExtra(TiC.PROPERTY_ICON));
 			}
 		}
+		if (intent.getAction().equals("REMOVE") ) {
+			notificationManager.cancelAll();
+		}
 		Log.d(LCAT, notificationOpts.toString());
 		getNotification();
 		return START_STICKY;
@@ -94,7 +92,6 @@ public class NotificationForegroundService extends Service {
 	 * service.
 	 */
 	private Notification getNotification() {
-
 		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				ctx/*
 					 * , Constants.NOTIFICATION.CHANNELID
