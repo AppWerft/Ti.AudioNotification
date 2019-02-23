@@ -30,6 +30,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Message;
@@ -152,10 +153,10 @@ public class NotificationProxy extends KrollProxy {
 		// signals to the service
 		// that since this activity is in the foreground, the service can exit
 		// foreground mode.
-		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		if (!ctx.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE))
-			Log.e(LCAT,
-					"cannot bind service, maybe you forgot to add the service to manifest\n<service android:name=\"de.appwerft.audionotification.NotificationForegroundService\"/>");
+		//Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		//if (!ctx.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE))
+		//	Log.e(LCAT,
+		//			"cannot bind service, maybe you forgot to add the service to manifest\n<service android:name=\"de.appwerft.audionotification.NotificationForegroundService\"/>");
 	}
 
 	@Override
@@ -180,7 +181,7 @@ public class NotificationProxy extends KrollProxy {
 			// in the foreground, and the service can respond by promoting
 			// itself to a foreground
 			// service.
-			ctx.unbindService(serviceConnection);
+			//ctx.unbindService(serviceConnection);
 			boundState = false;
 		}
 		super.onStop(activity);
@@ -197,10 +198,9 @@ public class NotificationProxy extends KrollProxy {
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				Log.i(LCAT, "ServiceConnection: >>>>  notificationForegroundService connected");
-				Log.i(LCAT, service.toString());
-				LocalBinder binder = (LocalBinder) service;
+				LocalBinder binder = (NotificationForegroundService.LocalBinder) service;
 				/* this serviceref will use for updates */
-				notificationForegroundService = ((NotificationForegroundService.LocalBinder) service).getService();
+				notificationForegroundService = binder.getService();
 
 				// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
 				 messenger = new Messenger(service);
@@ -215,4 +215,15 @@ public class NotificationProxy extends KrollProxy {
 				messenger = null;
 			}
 		};
+		private void moveToStartedState() {
+			 
+	      
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+	            Log.d(LCAT, "moveToStartedState: on N/lower");
+	           // startService(intent);
+	        } else {
+	            Log.d(LCAT, "moveToStartedState: on O");
+	           // startForegroundService(intent);
+	        }
+	}
 }

@@ -29,6 +29,7 @@ public class NotificationForegroundService extends Service {
 	private static final String LCAT = TiaudionotificationModule.LCAT + "_Service";
 	public static final String EXTRA_ACTION = "MYACTION";
 	private final Context ctx;
+	private IBinder binder;
 	private static final String EXTRA_STARTED_FROM_NOTIFICATION = PACKAGE_NAME + ".started_from_notification";
 
 	private boolean changingConfiguration;
@@ -57,19 +58,21 @@ public class NotificationForegroundService extends Service {
 			notificationManager.createNotificationChannel(notificationChannel);
 		}
 	}
-
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		Log.d(LCAT, "onBind");
 		stopForeground(true);
 		changingConfiguration = false;
+		 if (binder == null){
+	            binder = new LocalBinder();
+	        }
 		return binder;// messenger.getBinder();
 	}
 
-	private final IBinder binder = new LocalBinder();
+	
 
-	public class LocalBinder extends Binder {
-
+	public class LocalBinder extends android.os.Binder {
 		NotificationForegroundService getService() {
 			Log.d(LCAT, "NotificationForegroundService");
 			return NotificationForegroundService.this;
@@ -102,23 +105,20 @@ public class NotificationForegroundService extends Service {
 		if (!changingConfiguration) {
 			Notification notification = getNotification();
 			Log.d(LCAT, (String) notification.toString());
-			startForeground(Constants.NOTIFICATION.ID, notification);
+			
 			Log.d(LCAT, "notification started in Foreground");
 		} else
 			Log.w(LCAT, "onUnbind: was only a confchanging");
-		return true; // Ensures onRebind() is called when a client re-binds.
+		return false; // Ensures onRebind() is called when a client re-binds.
 	}
 
 	public void updateNotification(KrollDict opts) {
 		notificationOpts = opts;
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)) {
 		}
-
 	}
 
-	public void hideNotification() {
-	}
-
+	
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
 	/**
 	 * Returns the {@link NotificationCompat} used as part of the foreground
@@ -161,7 +161,8 @@ public class NotificationForegroundService extends Service {
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
 		Notification notification = notificationBuilder.build();
-		notificationManager.notify(/*notification id*/1, notificationBuilder.build());
+		//notificationManager.notify(Constants.NOTIFICATION.ID, notification);
+		startForeground(Constants.NOTIFICATION.ID, notification);
 		return notification;
 	}
 

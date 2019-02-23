@@ -1,7 +1,10 @@
 package de.appwerft.audionotification;
 
 public class Constants {
-
+	public interface KEY {
+		public static String COMMAND ="de.appwerft.foregroundservice.command";
+		public static String MESSAGE ="de.appwerft.foregroundservice.message";
+	}
 	public interface ACTION {
 		public static String MAIN_ACTION = "de.appwerft.foregroundservice.action.main";
 		public static String PREV_ACTION = "de.appwerft.foregroundservice.action.prev";
@@ -22,7 +25,7 @@ public class Constants {
 
 	public interface NOTIFICATION {
 		public static int FOREGROUND_SERVICE = 101;
-		public static int ID = 121234;
+		public static int ID = 1;
 		public static String CHANNELID = "2345";
 		public static String CHANNELNAME = "Hoerdatplayer";
 		public static String CHANNEL_DESC = "Hördatplayer";
