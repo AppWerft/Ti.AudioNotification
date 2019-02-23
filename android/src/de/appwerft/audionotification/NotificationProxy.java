@@ -87,25 +87,7 @@ public class NotificationProxy extends KrollProxy {
 		super.handleCreationDict(opts);
 	}
 
-	// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
-	@Kroll.method
-	public void show(KrollDict opts) {
-		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE))
-			notificationOpts.put(TiC.PROPERTY_TITLE, opts.getString(TiC.PROPERTY_TITLE));
-		if (opts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE))
-			notificationOpts.put(TiC.PROPERTY_SUBTITLE, opts.getString(TiC.PROPERTY_SUBTITLE));
-		if (!boundState)
-			return;
-		Message msg = Message.obtain(null, Constants.MSG.UPDATE, 0, 0);
-		msg.obj = opts;
-		try {
-			messenger.send(msg);
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
-	}
-
+	
 	private Bitmap loadImage(String imageName) {
 		Bitmap bitmap = null;
 		try {
@@ -118,15 +100,7 @@ public class NotificationProxy extends KrollProxy {
 		return bitmap;
 	}
 
-	@Kroll.method
-	public void update(KrollDict opts) {
-		if (opts.containsKeyAndNotNull("largeIcon")) {
-			opts.put("largeIcon", loadImage(opts.getString("largeIcon")));
-		}
-		if (notificationForegroundService != null && boundState) {
-			notificationForegroundService.updateNotification(opts);
-		}
-	}
+	
 
 	@Kroll.method
 	public void hide() {
