@@ -14,9 +14,15 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
+import android.os.Message;
+import android.os.Messenger;
+import android.support.v4.app.*;
 import android.util.Log;
 
 public class NotificationForegroundService extends Service {
@@ -54,40 +60,39 @@ public class NotificationForegroundService extends Service {
 			notificationManager.createNotificationChannel(notificationChannel);
 		}
 	}
-
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
 
+	
+
+	
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.e(LCAT, "onStartCommand");
-		HashMap<String, Object> notificationOpts = (HashMap<String, Object>) intent.getSerializableExtra("DICT");
+		HashMap<String, Object> notificationOpts = (HashMap<String, Object>)intent.getSerializableExtra("DICT");
 		getNotification();
 		return START_STICKY;
 	}
 
+		
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
 	/**
 	 * Returns the {@link NotificationCompat} used as part of the foreground
 	 * service.
 	 */
 	private Notification getNotification() {
-
-		Intent intent = new Intent(this, NotificationForegroundService.class);
-		// Extra to help us figure out if we arrived in onStartCommand via the
-		// notification or not.
-		intent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
-
-		// The activityIntent calls the app
+			// The activityIntent calls the app
 		Intent activityIntent = new Intent(Intent.ACTION_MAIN);
-		activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
+		//activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
+		
 		final String packageName = TiApplication.getInstance().getPackageName();
 		activityIntent.setComponent(new ComponentName(packageName,
 				packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName()));
-		PendingIntent pendingIntent = PendingIntent.getActivity(ctx, 0, activityIntent, 0);
 		Log.d(LCAT, "intents ready, try build NotificationCompat.Builder\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		// Building notification:
 		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
@@ -95,23 +100,41 @@ public class NotificationForegroundService extends Service {
 					 * , Constants.NOTIFICATION.CHANNELID
 					 */);
 		notificationBuilder //
-				.setAutoCancel(true).setSmallIcon(R("applogo", "drawable"))//
-				.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH) //
+				.setAutoCancel(true)
+				.setSmallIcon(R("applogo", "drawable"))//
+				.setDefaults(Notification.DEFAULT_ALL)
+				.setPriority(Notification.PRIORITY_HIGH) //
 				.setWhen(System.currentTimeMillis()).setOngoing(true)
 				.setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
-				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(pendingIntent);
+				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE))
+				.setContentIntent(pendingIntent);
 		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-
+		
 		Notification notification = notificationBuilder.build();
-		// notificationManager.notify(Constants.NOTIFICATION.ID, notification);
+		//notificationManager.notify(Constants.NOTIFICATION.ID, notification);
 		startForeground(Constants.NOTIFICATION.ID, notification);
 		return notification;
 	}
+
+	class IncomingHandler extends Handler {
+		@Override
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case Constants.NOTIFICATION.FOREGROUND_SERVICE:
+				KrollDict opts = (KrollDict) msg.obj;
+				updateNotification(opts);
+				break;
+			default:
+				super.handleMessage(msg);
+			}
+		}
+	}
+
 
 	private int R(String name, String type) {
 		int id = 0;
