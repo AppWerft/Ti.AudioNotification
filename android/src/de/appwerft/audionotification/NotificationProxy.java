@@ -69,6 +69,7 @@ public class NotificationProxy extends KrollProxy {
 
 	@Override
 	public void handleCreationDict(KrollDict opts) {
+		Log.d(LCAT,"handleCreationDict: " + opts.toString());
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE))
 			notificationOpts.put(TiC.PROPERTY_TITLE, opts.getString(TiC.PROPERTY_TITLE));
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE))
@@ -77,13 +78,14 @@ public class NotificationProxy extends KrollProxy {
 			notificationOpts.put(TiC.PROPERTY_ICON, opts.getString(TiC.PROPERTY_ICON));
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE))
 			notificationOpts.put(TiC.PROPERTY_IMAGE, loadImage(opts.getString(TiC.PROPERTY_IMAGE)));
+		
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
 		serviceIntent.putExtra("DICT", notificationOpts);
 		serviceIntent.putExtra("ACTION", "CREATE");
 		Log.d(LCAT,notificationOpts.toString());
 		ctx.startForegroundService(serviceIntent);
+		Log.d("LCAT", "startForegroundService(serviceIntent)");
 		super.handleCreationDict(opts);
-		
 	}
 
 	// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
