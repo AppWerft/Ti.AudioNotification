@@ -27,27 +27,21 @@ To use your module in code, you will need to require it.
 As statusbar symbol we need a set of pngs in folders `platform/android/res/drawables/*` in all resolutions from `drawable-xxxhdpi` (96px), `drawable-xxhdpi` (72px) to `drawable-mdpi` (24px) 
 
 
-
-
 ### ES6+ (recommended)
-
 
 ```javascript
 import AudioNotificationModule from 'de.appwerft.audionotification';
 
 const AudioNotification = AudioNotificationModule.createNotification({
-	lifecycleContainer : win,  // mandatory!
-	importance : AudioNotificationModule.NOTIFICATION_IMPORTANCE_DEFAULT,
-	icon : "appicon"           // ongs in /platform/android/res/drawable*
+	lifecycleContainer : win,  
+	icon : "appicon"           // mandatory!  pngs in /platform/android/res/drawable*
 });
+AudioNotification.setTitle("new title");
+AudioNotification.setSubtitle("new subtitle");
+AudioNotification.setImage("new cover image");
 
-AudioNotification.show({
-	cover : '/assets/stations/ndrkultur.png', // or 'http://'
-	title : "ndr kulturradio",
-	subtitle : 'Beethoven: 9. Symfonie'
-});
 
-AudioNotification.hide();
+AudioNotification.remove();
 
 
 ```
