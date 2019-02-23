@@ -145,10 +145,13 @@ public class NotificationProxy extends KrollProxy {
 		return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
 	}
 
+	
+	
+	
 	@Override
 	public void onStart(Activity activity) {
 		super.onStart(activity);
-		Log.d(LCAT, ">>>>>>>>>>>>>>>>>>>>>>>>>> onStart called");
+		Log.d(LCAT, ">>>>>>> onStart called");
 		// Bind to the service. If the service is in foreground mode, this
 		// signals to the service
 		// that since this activity is in the foreground, the service can exit
@@ -171,7 +174,7 @@ public class NotificationProxy extends KrollProxy {
 	@Override
 	public void onPause(Activity activity) {
 		Log.d(LCAT, "<<<<<< onPause called");
-		LocalBroadcastManager.getInstance(ctx).unregisterReceiver(receiver);
+		//LocalBroadcastManager.getInstance(ctx).unregisterReceiver(receiver);
 		super.onPause(activity);
 	}
 
