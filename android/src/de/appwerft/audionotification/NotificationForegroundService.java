@@ -69,7 +69,7 @@ public class NotificationForegroundService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.e(LCAT, "onStartCommand");
+		Log.e(LCAT, "onStartCommand with action " + intent.getAction());
 		if (intent.getAction().equals("CREATE")) {
 			Log.d(LCAT,"Intent CREATE ");
 			if (intent.hasExtra(TiC.PROPERTY_TITLE)) {
