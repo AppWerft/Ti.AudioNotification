@@ -1,5 +1,7 @@
 package de.appwerft.audionotification;
 
+import java.util.HashMap;
+
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
@@ -61,64 +63,22 @@ public class NotificationForegroundService extends Service {
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.d(LCAT, "onBind");
-		stopForeground(true);
-		changingConfiguration = false;
-		 if (binder == null){
-	            binder = new LocalBinder();
-	        }
-		return binder;// messenger.getBinder();
+		return null;
 	}
 
 	
 
-	public class LocalBinder extends android.os.Binder {
-		NotificationForegroundService getService() {
-			Log.d(LCAT, "NotificationForegroundService");
-			return NotificationForegroundService.this;
-		}
-	}
+	
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.e(LCAT, "onStartCommand");
+		HashMap<String, Object> notificationOpts = (HashMap<String, Object>)intent.getSerializableExtra("DICT");
+		getNotification();
 		return START_STICKY;
 	}
 
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		Log.e(LCAT, "onConfigurationChanged");
-		changingConfiguration = true;
-	}
-
-	@Override
-	public void onRebind(Intent intent) {
-		Log.e(LCAT, "onRebind");
-		stopForeground(true);
-		changingConfiguration = false;
-		super.onRebind(intent);
-	}
-
-	@Override
-	public boolean onUnbind(Intent intent) {
-		if (!changingConfiguration) {
-			Notification notification = getNotification();
-			Log.d(LCAT, (String) notification.toString());
-			
-			Log.d(LCAT, "notification started in Foreground");
-		} else
-			Log.w(LCAT, "onUnbind: was only a confchanging");
-		return false; // Ensures onRebind() is called when a client re-binds.
-	}
-
-	public void updateNotification(KrollDict opts) {
-		notificationOpts = opts;
-		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE)) {
-		}
-	}
-
-	
+		
 	// https://willowtreeapps.com/ideas/mobile-notifications-part-2-some-useful-android-notifications
 	/**
 	 * Returns the {@link NotificationCompat} used as part of the foreground
@@ -160,6 +120,7 @@ public class NotificationForegroundService extends Service {
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
+		
 		Notification notification = notificationBuilder.build();
 		//notificationManager.notify(Constants.NOTIFICATION.ID, notification);
 		startForeground(Constants.NOTIFICATION.ID, notification);

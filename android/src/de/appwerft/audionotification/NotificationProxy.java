@@ -49,26 +49,10 @@ public class NotificationProxy extends KrollProxy {
 	public static final String LCAT = TiaudionotificationModule.LCAT+"_Proxy";
 	private Context ctx;
 	// Tracks the bound state of the service.
-	private boolean boundState = false;
-	private Messenger messenger;
-	// You can define constants with @Kroll.constant, for example:
-	// @Kroll.constant public static final String EXTERNAL_NAME = value;
-
-	private MyServiceReceiver receiver;
+		
 	private KrollDict notificationOpts = new KrollDict();
 
-	private class MyServiceReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			intent.getParcelableExtra(NotificationForegroundService.EXTRA_ACTION);
-			boolean isforeground = intent.getBooleanExtra("INFOREGROUND", false);
-
-			KrollDict result = new KrollDict();
-			// if (!isforeground) {
-
-			// }
-		}
-	}
+	
 
 	
 
@@ -83,14 +67,23 @@ public class NotificationProxy extends KrollProxy {
 
 	}
 
-	// Methods
-	@Kroll.method
-	public void create(KrollDict opts) {
-		notificationOpts = opts;
-		Intent intent = new Intent(ctx, NotificationForegroundService.class);
-		Log.i(LCAT, "bindService in onStart of module was successful: "
-				+ ctx.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE));
-
+	@Override
+	public void handleCreationDict(KrollDict opts) {
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE))
+			notificationOpts.put(TiC.PROPERTY_TITLE, opts.getString(TiC.PROPERTY_TITLE));
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE))
+			notificationOpts.put(TiC.PROPERTY_SUBTITLE, opts.getString(TiC.PROPERTY_SUBTITLE));
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_ICON))
+			notificationOpts.put(TiC.PROPERTY_ICON, opts.getString(TiC.PROPERTY_ICON));
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE))
+			notificationOpts.put(TiC.PROPERTY_IMAGE, loadImage(opts.getString(TiC.PROPERTY_IMAGE)));
+		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		serviceIntent.putExtra("DICT", notificationOpts);
+		serviceIntent.putExtra("ACTION", "CREATE");
+		Log.d(LCAT,notificationOpts.toString());
+		ctx.startForegroundService(serviceIntent);
+		super.handleCreationDict(opts);
+		
 	}
 
 	// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
@@ -198,38 +191,5 @@ public class NotificationProxy extends KrollProxy {
 		Log.d(LCAT, "<<<<<< onDestroy called");
 		super.onDestroy(activity);
 	}
-	// Monitors the state of the connection to the service.
-		private ServiceConnection serviceConnection = new ServiceConnection() {
-			
-			@Override
-			public void onServiceConnected(ComponentName name, IBinder service) {
-				Log.i(LCAT, "ServiceConnection: >>>>  notificationForegroundService connected");
-				LocalBinder binder = (NotificationForegroundService.LocalBinder) service;
-				/* this serviceref will use for updates */
-				notificationForegroundService = binder.getService();
-
-				// https://stackoverflow.com/questions/43736714/how-to-pass-data-from-activity-to-running-service
-				 messenger = new Messenger(service);
-				boundState = true;
-			}
-
-			@Override
-			public void onServiceDisconnected(ComponentName name) {
-				Log.i(LCAT, "ServiceConnection: <<<< notificationForegroundService disconnected");
-				notificationForegroundService = null;
-				boundState = false;
-				messenger = null;
-			}
-		};
-		private void moveToStartedState() {
-			 
-	      
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-	            Log.d(LCAT, "moveToStartedState: on N/lower");
-	           // startService(intent);
-	        } else {
-	            Log.d(LCAT, "moveToStartedState: on O");
-	           // startForegroundService(intent);
-	        }
-	}
+	
 }
