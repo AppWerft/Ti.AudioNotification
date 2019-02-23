@@ -63,14 +63,14 @@ public class NotificationProxy extends KrollProxy {
 		serviceIntent.putExtra(TiC.PROPERTY_SUBTITLE, notificationOpts.getString(TiC.PROPERTY_SUBTITLE));
 		serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
 		serviceIntent.putExtra(TiC.PROPERTY_IMAGE,image);
-		serviceIntent.putExtra("ACTION", "CREATE");
+		serviceIntent.setAction("CREATE");
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
 	@Kroll.method
 	public void remove() {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		serviceIntent.putExtra("ACTION", "REMOVE");
+		serviceIntent.setAction("REMOVE");
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
@@ -78,7 +78,7 @@ public class NotificationProxy extends KrollProxy {
 	public void setTitle(String title) {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
 		serviceIntent.putExtra(TiC.PROPERTY_TITLE, title);
-		serviceIntent.putExtra("ACTION", "UPDATE");
+		serviceIntent.setAction("UPDATE");
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
