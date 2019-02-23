@@ -161,13 +161,16 @@ public class NotificationProxy extends KrollProxy {
 
 	@Override
 	public void onResume(Activity activity) {
+		
 		super.onResume(activity);
+		Log.d(LCAT, ">>>>>> onResume called");
 		// LocalBroadcastManager.getInstance(ctx).registerReceiver(receiver,
 		// new IntentFilter(NotificationForegroundService.ACTION_BROADCAST));
 	}
 
 	@Override
 	public void onPause(Activity activity) {
+		Log.d(LCAT, "<<<<<< onPause called");
 		LocalBroadcastManager.getInstance(ctx).unregisterReceiver(receiver);
 		super.onPause(activity);
 	}
