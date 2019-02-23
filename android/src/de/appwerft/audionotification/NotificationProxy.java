@@ -86,7 +86,7 @@ public class NotificationProxy extends KrollProxy {
 	public void setSubtitle(String subtitle) {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
 		serviceIntent.putExtra(TiC.PROPERTY_SUBTITLE, subtitle);
-		serviceIntent.putExtra("ACTION", "UPDATE");
+		serviceIntent.setAction("UPDATE");
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
@@ -94,7 +94,7 @@ public class NotificationProxy extends KrollProxy {
 	public void setImage(String path) {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
 		serviceIntent.putExtra(TiC.PROPERTY_IMAGE, loadImage(path));
-		serviceIntent.putExtra("ACTION", "UPDATE");
+		serviceIntent.setAction("UPDATE");
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
