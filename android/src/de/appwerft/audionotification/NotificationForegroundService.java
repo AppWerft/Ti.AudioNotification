@@ -1,5 +1,6 @@
 package de.appwerft.audionotification;
 
+import java.io.FileInputStream;
 import java.util.HashMap;
 
 import org.appcelerator.kroll.KrollDict;
@@ -115,10 +116,15 @@ public class NotificationForegroundService extends Service {
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
-			String path = notificationOpts.getString(TiC.PROPERTY_IMAGE);
-			Log.d(LCAT, path);
+			String filename = notificationOpts.getString(TiC.PROPERTY_IMAGE);
+			try {
+			    FileInputStream is = this.openFileInput(filename);
+			    notificationBuilder.setLargeIcon(BitmapFactory.decodeStream(is));
+			    is.close();
+			} catch (Exception e) {
+			    e.printStackTrace();
+			}
 			//Bitmap logo = TiUIHelper.createBitmap(file.getInputStream());
 			//notificationBuilder.setLargeIcon(logo);
 		}

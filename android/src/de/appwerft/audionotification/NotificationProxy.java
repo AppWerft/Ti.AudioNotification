@@ -1,5 +1,6 @@
 package de.appwerft.audionotification;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.appcelerator.kroll.KrollDict;
@@ -68,7 +69,7 @@ public class NotificationProxy extends KrollProxy {
 		if (notificationOpts.containsKey(TiC.PROPERTY_ICON))
 			serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
-			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, getImagePath(notificationOpts.getString(TiC.PROPERTY_IMAGE)));
+			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, cacheImage(notificationOpts.getString(TiC.PROPERTY_IMAGE)));
 		}	
 		serviceIntent.setAction("CREATE");
 		ctx.startForegroundService(serviceIntent);
@@ -119,6 +120,26 @@ public class NotificationProxy extends KrollProxy {
 			return null;
 		}
 	}
+	private String cacheImage(String imageName) {
+		Bitmap bmp = loadImage(imageName);
+		try {
+		    //Write file
+		    String filename = "bitmap.png";
+		    FileOutputStream stream = ctx.openFileOutput(filename, Context.MODE_PRIVATE);
+		    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+		    //Cleanup
+		    stream.close();
+		    bmp.recycle();
+		    return filename;
+		    //Pop intent
+		} catch (Exception e) {
+		    e.printStackTrace();
+		    return null;
+		}
+		
+	}
+	
+	
 	private String getImagePath(String imageName) {
 		TiBaseFile file = TiFileFactory.createTitaniumFile(new String[] { resolveUrl(null, imageName) }, false);
 		return file.nativePath();
