@@ -120,7 +120,10 @@ public class NotificationForegroundService extends Service {
 			String filename = notificationOpts.getString(TiC.PROPERTY_IMAGE);
 			try {
 			    FileInputStream is = this.openFileInput(filename);
-			    notificationBuilder.setLargeIcon(BitmapFactory.decodeStream(is));
+			    Bitmap bitmap = BitmapFactory.decodeStream(is);
+			    notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
+			               .bigPicture(bitmap));
+			    notificationBuilder.setLargeIcon(bitmap);
 			    is.close();
 			} catch (Exception e) {
 			    e.printStackTrace();
