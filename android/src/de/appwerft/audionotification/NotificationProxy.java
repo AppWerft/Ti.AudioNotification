@@ -59,15 +59,25 @@ public class NotificationProxy extends KrollProxy {
 	@Kroll.method
 	public void show() {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		serviceIntent.putExtra(TiC.PROPERTY_TITLE, notificationOpts.getString(TiC.PROPERTY_TITLE));
-		serviceIntent.putExtra(TiC.PROPERTY_SUBTITLE, notificationOpts.getString(TiC.PROPERTY_SUBTITLE));
-		serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
-		String path = notificationOpts.getString(TiC.PROPERTY_IMAGE);
-		if (loadImage(path) != null) {
-			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, loadImage(path));
-		} else {
-			serviceIntent.putExtra(TiC.PROPERTY_URL, path);
-		}
+		Log.d(LCAT,notificationOpts.toString());
+		if (notificationOpts.containsKey(TiC.PROPERTY_TITLE))
+			serviceIntent.putExtra(TiC.PROPERTY_TITLE, notificationOpts.getString(TiC.PROPERTY_TITLE));
+		if (notificationOpts.containsKey(TiC.PROPERTY_SUBTITLE))
+			serviceIntent.putExtra(TiC.PROPERTY_SUBTITLE, notificationOpts.getString(TiC.PROPERTY_SUBTITLE));
+		if (notificationOpts.containsKey(TiC.PROPERTY_ICON))
+			serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
+		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
+			
+			String path = notificationOpts.getString(TiC.PROPERTY_IMAGE);
+			Log.d(LCAT,"IMAGE work: " + path);
+			if (loadImage(path) != null) {
+				Log.d(LCAT,"IMAGE locale ");
+				serviceIntent.putExtra(TiC.PROPERTY_IMAGE, loadImage(path));
+			} else {
+				Log.d(LCAT,"IMAGE remote ");
+				serviceIntent.putExtra(TiC.PROPERTY_URL, path);
+			}
+		}	
 		serviceIntent.setAction("CREATE");
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
