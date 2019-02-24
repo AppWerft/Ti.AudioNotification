@@ -141,7 +141,7 @@ public class NotificationForegroundService extends Service {
 		final String packageName = TiApplication.getInstance().getPackageName();
 		final String className = packageName + "." + TiApplication.getAppRootOrCurrentActivity().getLocalClassName();
 		Intent activityIntent = new Intent(Intent.ACTION_MAIN);
-		activityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+		activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		activityIntent.setComponent(new ComponentName(packageName, className));
 		PendingIntent activityPendingIntent = PendingIntent.getActivity(ctx, 1, activityIntent,
 				PendingIntent.FLAG_UPDATE_CURRENT);
