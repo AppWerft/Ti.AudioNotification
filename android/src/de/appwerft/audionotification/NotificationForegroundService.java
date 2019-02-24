@@ -144,7 +144,7 @@ public class NotificationForegroundService extends Service {
 		activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		activityIntent.setComponent(new ComponentName(packageName, className));
 		PendingIntent activityPendingIntent = PendingIntent.getActivity(ctx, 1, activityIntent,
-				PendingIntent.FLAG_UPDATE_CURRENT);
+				PendingIntent.FLAG_CANCEL_CURRENT);
 		return activityPendingIntent;
 	}
 
