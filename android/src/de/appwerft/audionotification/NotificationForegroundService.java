@@ -83,7 +83,7 @@ public class NotificationForegroundService extends Service {
 				notificationOpts.put(TiC.PROPERTY_IMAGE, intent.getStringExtra(TiC.PROPERTY_IMAGE));
 			}
 		}
-		if (intent.getAction().equals("REMOVE") ) {
+		if (intent.getAction().equals("REMOVE")) {
 			notificationManager.cancelAll();
 		}
 		Log.d(LCAT, notificationOpts.toString());
@@ -113,10 +113,11 @@ public class NotificationForegroundService extends Service {
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-		Bitmap logo = BitmapFactory.decodeFile(notificationOpts.getString(TiC.PROPERTY_IMAGE));
-	    //Drawable d = new BitmapDrawable(getResources(), myBitmap);
-	  	notificationBuilder.setLargeIcon(logo);
-		
+
+		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
+			Bitmap logo = BitmapFactory.decodeFile(notificationOpts.getString(TiC.PROPERTY_IMAGE));
+			notificationBuilder.setLargeIcon(logo);
+		}
 		Notification notification = notificationBuilder.build();
 		// notificationManager.notify(Constants.NOTIFICATION.ID, notification);
 		startForeground(Constants.NOTIFICATION.ID, notification);
