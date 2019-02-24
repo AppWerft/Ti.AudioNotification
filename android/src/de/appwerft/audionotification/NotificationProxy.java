@@ -51,15 +51,17 @@ public class NotificationProxy extends KrollProxy {
 			notificationOpts.put(TiC.PROPERTY_SUBTITLE, opts.getString(TiC.PROPERTY_SUBTITLE));
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_ICON))
 			notificationOpts.put(TiC.PROPERTY_ICON, opts.getString(TiC.PROPERTY_ICON));
-		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE))
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE)) {
+			notificationOpts.put(TiC.PROPERTY_IMAGE, opts.getString(TiC.PROPERTY_IMAGE));
 			image = loadImage(opts.getString(TiC.PROPERTY_IMAGE));
+		}	
 		super.handleCreationDict(opts);
 	}
 
 	@Kroll.method
 	public void show() {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		Log.d(LCAT,notificationOpts.toString());
+		Log.d(LCAT,"show::" +notificationOpts.toString());
 		if (notificationOpts.containsKey(TiC.PROPERTY_TITLE))
 			serviceIntent.putExtra(TiC.PROPERTY_TITLE, notificationOpts.getString(TiC.PROPERTY_TITLE));
 		if (notificationOpts.containsKey(TiC.PROPERTY_SUBTITLE))
