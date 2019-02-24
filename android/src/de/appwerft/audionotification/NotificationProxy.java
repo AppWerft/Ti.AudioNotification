@@ -68,7 +68,7 @@ public class NotificationProxy extends KrollProxy {
 		if (notificationOpts.containsKey(TiC.PROPERTY_ICON))
 			serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
-			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
+			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, getImagePath(notificationOpts.getString(TiC.PROPERTY_IMAGE)));
 		}	
 		serviceIntent.setAction("CREATE");
 		ctx.startForegroundService(serviceIntent);

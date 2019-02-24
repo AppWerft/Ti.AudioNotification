@@ -5,6 +5,8 @@ import java.util.HashMap;
 import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.titanium.TiApplication;
 import org.appcelerator.titanium.TiC;
+import org.appcelerator.titanium.io.TiBaseFile;
+import org.appcelerator.titanium.util.TiUIHelper;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -115,10 +117,10 @@ public class NotificationForegroundService extends Service {
 		}
 
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
-			String path = notificationOpts.getString(TiC.PROPERTY_IMAGE).replace("file://", "");
-			Log.d(LCAT,path);
-			Bitmap logo = BitmapFactory.decodeFile(path);
-			notificationBuilder.setLargeIcon(logo);
+			String path = notificationOpts.getString(TiC.PROPERTY_IMAGE);
+			Log.d(LCAT, path);
+			//Bitmap logo = TiUIHelper.createBitmap(file.getInputStream());
+			//notificationBuilder.setLargeIcon(logo);
 		}
 		Notification notification = notificationBuilder.build();
 		// notificationManager.notify(Constants.NOTIFICATION.ID, notification);
