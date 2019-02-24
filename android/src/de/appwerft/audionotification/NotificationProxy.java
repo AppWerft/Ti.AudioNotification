@@ -52,8 +52,7 @@ public class NotificationProxy extends KrollProxy {
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_ICON))
 			notificationOpts.put(TiC.PROPERTY_ICON, opts.getString(TiC.PROPERTY_ICON));
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE)) {
-			notificationOpts.put(TiC.PROPERTY_IMAGE, opts.getString(TiC.PROPERTY_IMAGE));
-			image = loadImage(opts.getString(TiC.PROPERTY_IMAGE));
+			notificationOpts.put(TiC.PROPERTY_IMAGE, getImagePath(opts.getString(TiC.PROPERTY_IMAGE)));
 		}	
 		super.handleCreationDict(opts);
 	}
@@ -69,16 +68,7 @@ public class NotificationProxy extends KrollProxy {
 		if (notificationOpts.containsKey(TiC.PROPERTY_ICON))
 			serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
-			
-			String path = notificationOpts.getString(TiC.PROPERTY_IMAGE);
-			Log.d(LCAT,"IMAGE work: " + path);
-			if (loadImage(path) != null) {
-				Log.d(LCAT,"IMAGE locale ");
-				serviceIntent.putExtra(TiC.PROPERTY_IMAGE, loadImage(path));
-			} else {
-				Log.d(LCAT,"IMAGE remote ");
-				serviceIntent.putExtra(TiC.PROPERTY_URL, path);
-			}
+			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
 		}	
 		serviceIntent.setAction("CREATE");
 		ctx.startForegroundService(serviceIntent);
@@ -114,11 +104,7 @@ public class NotificationProxy extends KrollProxy {
 	@Kroll.method
 	public void setImage(String path) {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		if (loadImage(path) != null) {
-			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, loadImage(path));
-		} else {
-			serviceIntent.putExtra(TiC.PROPERTY_URL, path);
-		}
+		serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
 		serviceIntent.setAction("UPDATE");
 		ctx.startForegroundService(serviceIntent);
 	}
@@ -132,6 +118,11 @@ public class NotificationProxy extends KrollProxy {
 		} catch (IOException e) {
 			return null;
 		}
+	}
+	private String getImagePath(String imageName) {
+		TiBaseFile file = TiFileFactory.createTitaniumFile(new String[] { resolveUrl(null, imageName) }, false);
+		return file.nativePath();
+		
 	}
 
 	@Kroll.method

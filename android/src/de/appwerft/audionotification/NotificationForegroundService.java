@@ -15,6 +15,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Binder;
 import android.os.Build;
@@ -77,6 +79,9 @@ public class NotificationForegroundService extends Service {
 			if (intent.hasExtra(TiC.PROPERTY_ICON)) {
 				notificationOpts.put(TiC.PROPERTY_ICON, intent.getStringExtra(TiC.PROPERTY_ICON));
 			}
+			if (intent.hasExtra(TiC.PROPERTY_IMAGE)) {
+				notificationOpts.put(TiC.PROPERTY_IMAGE, intent.getStringExtra(TiC.PROPERTY_IMAGE));
+			}
 		}
 		if (intent.getAction().equals("REMOVE") ) {
 			notificationManager.cancelAll();
@@ -108,7 +113,10 @@ public class NotificationForegroundService extends Service {
 			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-
+		Bitmap logo = BitmapFactory.decodeFile(notificationOpts.getString(TiC.PROPERTY_IMAGE));
+	    //Drawable d = new BitmapDrawable(getResources(), myBitmap);
+	  	notificationBuilder.setLargeIcon(logo);
+		
 		Notification notification = notificationBuilder.build();
 		// notificationManager.notify(Constants.NOTIFICATION.ID, notification);
 		startForeground(Constants.NOTIFICATION.ID, notification);
