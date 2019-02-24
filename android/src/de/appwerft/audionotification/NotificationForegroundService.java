@@ -115,7 +115,9 @@ public class NotificationForegroundService extends Service {
 		}
 
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
-			Bitmap logo = BitmapFactory.decodeFile(notificationOpts.getString(TiC.PROPERTY_IMAGE));
+			String path = notificationOpts.getString(TiC.PROPERTY_IMAGE).replace("file://", "");
+			Log.d(LCAT,path);
+			Bitmap logo = BitmapFactory.decodeFile(path);
 			notificationBuilder.setLargeIcon(logo);
 		}
 		Notification notification = notificationBuilder.build();
