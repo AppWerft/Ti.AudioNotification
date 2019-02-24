@@ -28,7 +28,7 @@ public class NotificationProxy extends KrollProxy {
 	// Tracks the bound state of the service.
 
 	private KrollDict notificationOpts = new KrollDict();
-	private Bitmap image=null;
+	private Bitmap image = null;
 
 	public NotificationProxy() {
 		super();
@@ -62,11 +62,17 @@ public class NotificationProxy extends KrollProxy {
 		serviceIntent.putExtra(TiC.PROPERTY_TITLE, notificationOpts.getString(TiC.PROPERTY_TITLE));
 		serviceIntent.putExtra(TiC.PROPERTY_SUBTITLE, notificationOpts.getString(TiC.PROPERTY_SUBTITLE));
 		serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
-		serviceIntent.putExtra(TiC.PROPERTY_IMAGE,image);
+		String path = notificationOpts.getString(TiC.PROPERTY_IMAGE);
+		if (loadImage(path) != null) {
+			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, loadImage(path));
+		} else {
+			serviceIntent.putExtra(TiC.PROPERTY_URL, path);
+		}
 		serviceIntent.setAction("CREATE");
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
+
 	@Kroll.method
 	public void remove() {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
@@ -74,6 +80,7 @@ public class NotificationProxy extends KrollProxy {
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
+
 	@Kroll.method
 	public void setTitle(String title) {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
@@ -82,6 +89,7 @@ public class NotificationProxy extends KrollProxy {
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
+
 	@Kroll.method
 	public void setSubtitle(String subtitle) {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
@@ -90,13 +98,17 @@ public class NotificationProxy extends KrollProxy {
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
+
 	@Kroll.method
 	public void setImage(String path) {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		serviceIntent.putExtra(TiC.PROPERTY_IMAGE, loadImage(path));
+		if (loadImage(path) != null) {
+			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, loadImage(path));
+		} else {
+			serviceIntent.putExtra(TiC.PROPERTY_URL, path);
+		}
 		serviceIntent.setAction("UPDATE");
 		ctx.startForegroundService(serviceIntent);
-		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
 
 	private Bitmap loadImage(String imageName) {
@@ -104,14 +116,11 @@ public class NotificationProxy extends KrollProxy {
 		try {
 			TiBaseFile file = TiFileFactory.createTitaniumFile(new String[] { resolveUrl(null, imageName) }, false);
 			bitmap = TiUIHelper.createBitmap(file.getInputStream());
+			return bitmap;
 		} catch (IOException e) {
-
 			return null;
 		}
-		return bitmap;
 	}
-	
-
 
 	@Kroll.method
 	public void hide() {
