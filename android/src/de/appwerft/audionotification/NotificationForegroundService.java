@@ -61,6 +61,7 @@ public class NotificationForegroundService extends Service {
 			notificationChannel.enableVibration(true);
 			notificationManager.createNotificationChannel(notificationChannel);
 		}
+		Log.d(LCAT,"onCreate() started");
 	}
 
 	@Override
@@ -85,7 +86,8 @@ public class NotificationForegroundService extends Service {
 			if (intent.hasExtra(TiC.PROPERTY_IMAGE)) {
 				notificationOpts.put(TiC.PROPERTY_IMAGE, intent.getStringExtra(TiC.PROPERTY_IMAGE));
 			}
-			getNotification();
+			startForeground(Constants.NOTIFICATION.ID, getNotification());
+			Log.d(LCAT,"startForeground() started");
 		}
 		else if (intent.getAction().equals("REMOVE")) {
 			stopForeground(true);
@@ -134,7 +136,7 @@ public class NotificationForegroundService extends Service {
 		}
 		Notification notification = notificationBuilder.build();
 		// notificationManager.notify(Constants.NOTIFICATION.ID, notification);
-		startForeground(Constants.NOTIFICATION.ID, notification);
+		
 		return notification;
 	}
 
