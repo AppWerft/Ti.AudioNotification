@@ -70,7 +70,7 @@ public class NotificationForegroundService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		Log.e(LCAT, "onStartCommand with action " + intent.getAction());
+		Log.d(LCAT, "onStartCommand with action " + intent.getAction());
 		if (intent.getAction().equals("CREATE") || intent.getAction().equals("UPDATE")) {
 			Log.d(LCAT, "Intent CREATE ");
 			if (intent.hasExtra(TiC.PROPERTY_TITLE)) {
@@ -85,12 +85,14 @@ public class NotificationForegroundService extends Service {
 			if (intent.hasExtra(TiC.PROPERTY_IMAGE)) {
 				notificationOpts.put(TiC.PROPERTY_IMAGE, intent.getStringExtra(TiC.PROPERTY_IMAGE));
 			}
+			getNotification();
 		}
-		if (intent.getAction().equals("REMOVE")) {
-			notificationManager.cancelAll();
+		else if (intent.getAction().equals("REMOVE")) {
+			stopForeground(true);
+			stopSelf(); 
 		}
 		Log.d(LCAT, notificationOpts.toString());
-		getNotification();
+		
 		return START_STICKY;
 	}
 
@@ -113,7 +115,6 @@ public class NotificationForegroundService extends Service {
 		// Set the Channel ID for Android O.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
-			Log.d(LCAT, "setChannelId to " + Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
