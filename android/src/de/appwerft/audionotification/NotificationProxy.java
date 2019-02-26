@@ -81,7 +81,6 @@ public class NotificationProxy extends KrollProxy {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
 		serviceIntent.setAction("REMOVE");
 		ctx.startForegroundService(serviceIntent);
-		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
 
 	@Kroll.method
@@ -124,7 +123,7 @@ public class NotificationProxy extends KrollProxy {
 		Bitmap bmp = loadImage(imageName);
 		try {
 		    //Write file
-		    String filename = "bitmap.png";
+		    String filename = "logo-bitmap.png";
 		    FileOutputStream stream = ctx.openFileOutput(filename, Context.MODE_PRIVATE);
 		    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
 		    //Cleanup
@@ -133,17 +132,16 @@ public class NotificationProxy extends KrollProxy {
 		    return filename;
 		    //Pop intent
 		} catch (Exception e) {
-		    e.printStackTrace();
+		//    e.printStackTrace();
 		    return null;
 		}
 		
+		
 	}
-	
 	
 	private String getImagePath(String imageName) {
 		TiBaseFile file = TiFileFactory.createTitaniumFile(new String[] { resolveUrl(null, imageName) }, false);
-		return file.nativePath();
-		
+		return file.nativePath();	
 	}
 
 	@Kroll.method
@@ -186,6 +184,7 @@ public class NotificationProxy extends KrollProxy {
 	@Override
 	public void onDestroy(Activity activity) {
 		Log.d(LCAT, "<<<<<< onDestroy called");
+		remove();
 		super.onDestroy(activity);
 	}
 

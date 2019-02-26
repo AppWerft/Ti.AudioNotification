@@ -75,6 +75,7 @@ public class NotificationForegroundService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(LCAT, "onStartCommand with action " + intent.getAction());
 		if (intent.getAction().equals("CREATE") || intent.getAction().equals("UPDATE")) {
+			
 			Log.d(LCAT, "Intent CREATE ");
 			if (intent.hasExtra(TiC.PROPERTY_TITLE)) {
 				notificationOpts.put(TiC.PROPERTY_TITLE, intent.getStringExtra(TiC.PROPERTY_TITLE));
@@ -109,6 +110,7 @@ public class NotificationForegroundService extends Service {
 	 * service.
 	 */
 	private Notification getNotification() {
+		Log.d(LCAT,"getNotification start");
 		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				ctx/*
 					 * , Constants.NOTIFICATION.CHANNELID
@@ -120,6 +122,7 @@ public class NotificationForegroundService extends Service {
 				.setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
 				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(getPendingIntent());
 		// Set the Channel ID for Android O.
+		Log.d(LCAT,"getNotification adding ChannelId");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
@@ -134,6 +137,7 @@ public class NotificationForegroundService extends Service {
 			    notificationBuilder.setLargeIcon(bitmap);
 			    is.close();
 			} catch (Exception e) {
+				Log.e(LCAT,"issue during image handling");
 			    e.printStackTrace();
 			}
 			//Bitmap logo = TiUIHelper.createBitmap(file.getInputStream());
