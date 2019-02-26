@@ -129,8 +129,12 @@ public class NotificationForegroundService extends Service {
 		}
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
 			String filename = notificationOpts.getString(TiC.PROPERTY_IMAGE);
+			
 			try {
 			    FileInputStream is = this.openFileInput(filename);
+			    Log.d(LCAT,"is="+is.toString());
+			    Log.d(LCAT,"exists="+is.available());
+			    
 			    Bitmap bitmap = BitmapFactory.decodeStream(is);
 			    notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
 			               .bigPicture(bitmap));
