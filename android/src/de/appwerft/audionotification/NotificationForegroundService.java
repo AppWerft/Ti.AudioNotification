@@ -38,7 +38,8 @@ public class NotificationForegroundService extends Service {
 	private final Context ctx;
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts = new KrollDict();
-	private long when =0;
+	private long when = 0;
+
 	public NotificationForegroundService() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
@@ -63,7 +64,7 @@ public class NotificationForegroundService extends Service {
 			notificationChannel.setSound(null, null);
 			notificationManager.createNotificationChannel(notificationChannel);
 		}
-		Log.d(LCAT,"onCreate() started");
+		Log.d(LCAT, "onCreate() started");
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public class NotificationForegroundService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(LCAT, "onStartCommand with action " + intent.getAction());
 		if (intent.getAction().equals("CREATE") || intent.getAction().equals("UPDATE")) {
-			
+
 			Log.d(LCAT, "Intent CREATE ");
 			if (intent.hasExtra(TiC.PROPERTY_TITLE)) {
 				notificationOpts.put(TiC.PROPERTY_TITLE, intent.getStringExtra(TiC.PROPERTY_TITLE));
@@ -90,17 +91,17 @@ public class NotificationForegroundService extends Service {
 				notificationOpts.put(TiC.PROPERTY_IMAGE, intent.getStringExtra(TiC.PROPERTY_IMAGE));
 			}
 			startForeground(Constants.NOTIFICATION.ID, getNotification());
-			Log.d(LCAT,"startForeground() started");
+			Log.d(LCAT, "startForeground() started");
 		}
 		if (intent.getAction().equals("CREATE")) {
-			when=System.currentTimeMillis();
-		} 
+			when = System.currentTimeMillis();
+		}
 		if (intent.getAction().equals("REMOVE")) {
 			stopForeground(true);
-			stopSelf(); 
+			stopSelf();
 		}
 		Log.d(LCAT, notificationOpts.toString());
-		
+
 		return START_STICKY;
 	}
 
@@ -110,7 +111,7 @@ public class NotificationForegroundService extends Service {
 	 * service.
 	 */
 	private Notification getNotification() {
-		Log.d(LCAT,"getNotification start");
+		Log.d(LCAT, "getNotification start");
 		final NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(
 				ctx/*
 					 * , Constants.NOTIFICATION.CHANNELID
@@ -118,38 +119,29 @@ public class NotificationForegroundService extends Service {
 		notificationBuilder //
 				.setAutoCancel(true).setSmallIcon(R("applogo", "drawable"))//
 				.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH) //
-				.setWhen(when).setOngoing(true)
-				.setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
+				.setWhen(when).setOngoing(true).setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
 				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(getPendingIntent());
 		// Set the Channel ID for Android O.
-		Log.d(LCAT,"getNotification adding ChannelId");
+		Log.d(LCAT, "getNotification adding ChannelId");
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
-		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
+		if (notificationOpts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE)) {
 			String filename = notificationOpts.getString(TiC.PROPERTY_IMAGE);
-			 Log.d(LCAT,"fn="+filename);
 			try {
-			    FileInputStream is = this.openFileInput(filename);
-			    Log.d(LCAT,"is="+is.toString());
-			    Log.d(LCAT,"exists="+is.available());
-			    
-			    Bitmap bitmap = BitmapFactory.decodeStream(is);
-			    notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
-			               .bigPicture(bitmap));
-			    notificationBuilder.setLargeIcon(bitmap);
-			    is.close();
+				FileInputStream is = this.openFileInput(filename);
+				Bitmap bitmap = BitmapFactory.decodeStream(is);
+				notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(bitmap));
+				notificationBuilder.setLargeIcon(bitmap);
+				is.close();
 			} catch (Exception e) {
-				Log.e(LCAT,"issue during image handling");
-			    e.printStackTrace();
+				e.printStackTrace();
 			}
-			//Bitmap logo = TiUIHelper.createBitmap(file.getInputStream());
-			//notificationBuilder.setLargeIcon(logo);
 		}
 		Notification notification = notificationBuilder.build();
 		// notificationManager.notify(Constants.NOTIFICATION.ID, notification);
-		
+
 		return notification;
 	}
 
