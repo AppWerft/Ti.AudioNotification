@@ -49,16 +49,18 @@ public class NotificationForegroundService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d(LCAT, "getSystemService inside onCreate");
+		Log.d(LCAT, "onCreate");
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// Android O requires a Notification Channel.
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 			// Create the channel for the notification
 			NotificationChannel notificationChannel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
-					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_MAX);
+					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_LOW);
 			notificationChannel.setDescription("HörDat");
+			notificationChannel.setName("hoerdat");
 			notificationChannel.setVibrationPattern(new long[] { 0 });
 			notificationChannel.enableVibration(true);
+			notificationChannel.setSound(null, null);
 			notificationManager.createNotificationChannel(notificationChannel);
 		}
 		Log.d(LCAT,"onCreate() started");
