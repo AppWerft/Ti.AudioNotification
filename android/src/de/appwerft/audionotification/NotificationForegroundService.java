@@ -38,7 +38,7 @@ public class NotificationForegroundService extends Service {
 	private final Context ctx;
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts = new KrollDict();
-
+	private long when =0;
 	public NotificationForegroundService() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
@@ -89,7 +89,10 @@ public class NotificationForegroundService extends Service {
 			startForeground(Constants.NOTIFICATION.ID, getNotification());
 			Log.d(LCAT,"startForeground() started");
 		}
-		else if (intent.getAction().equals("REMOVE")) {
+		if (intent.getAction().equals("CREATE")) {
+			when=System.currentTimeMillis();
+		} 
+		if (intent.getAction().equals("REMOVE")) {
 			stopForeground(true);
 			stopSelf(); 
 		}
@@ -111,7 +114,7 @@ public class NotificationForegroundService extends Service {
 		notificationBuilder //
 				.setAutoCancel(true).setSmallIcon(R("applogo", "drawable"))//
 				.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH) //
-				.setWhen(System.currentTimeMillis()).setOngoing(true)
+				.setWhen(when).setOngoing(true)
 				.setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
 				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(getPendingIntent());
 		// Set the Channel ID for Android O.
