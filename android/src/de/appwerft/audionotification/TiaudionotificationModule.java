@@ -8,36 +8,24 @@
  */
 package de.appwerft.audionotification;
 
-import org.appcelerator.kroll.KrollDict;
+import java.util.List;
+
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
-import org.appcelerator.titanium.TiC;
 
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.ApplicationInfo;
-import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.os.RemoteException;
-import android.support.v4.content.LocalBroadcastManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
+import android.support.v7.media.MediaRouter;
+import android.support.v7.media.MediaRouter.ProviderInfo;
+import android.support.v7.media.MediaRouter.RouteInfo;
 
 @Kroll.module(name = "Tiaudionotification", id = "de.appwerft.audionotification")
 public class TiaudionotificationModule extends KrollModule {
 	// A reference to the service used to get location updates.
-	private NotificationForegroundService notificationForegroundService = null;
-	// Standard Debugging variables
 	public static final String LCAT = "🎈TiAudioNot";
-	
+
 	@Kroll.constant
 	public static final int NOTIFICATION_IMPORTANCE_DEFAULT = NotificationManager.IMPORTANCE_DEFAULT;
 	@Kroll.constant
@@ -50,9 +38,23 @@ public class TiaudionotificationModule extends KrollModule {
 	public static final int NOTIFICATION_IMPORTANCE_MIN = NotificationManager.IMPORTANCE_MIN;
 	@Kroll.constant
 	public static final int NOTIFICATION_IMPORTANCE_MAX = NotificationManager.IMPORTANCE_MAX;
-	
+
+	@Kroll.constant
+	public static final int AUDIO_BLUETOOTH = 0;
+
+	@Kroll.constant
+	public static final int AUDIO_SPEAKER = 1;
+	@Kroll.constant
+	public static final int AUDIO_HEADPHONES = 2;
+	@Kroll.constant
+	public static final int AUDIO_EARPIECE = 3;
+	private MediaRouter mediaRouter;
+	private Context ctx;
+
 	public TiaudionotificationModule() {
 		super();
+		ctx = TiApplication.getInstance().getApplicationContext();
+		mediaRouter = MediaRouter.getInstance(ctx);
 	}
 
 	@Kroll.onAppCreate
@@ -60,5 +62,28 @@ public class TiaudionotificationModule extends KrollModule {
 
 	}
 
+	@Kroll.method
+	public void setAudioDestination(int destination) {
 
+	}
+
+	@Kroll.method
+	public boolean isBluetootAvailable() {
+		return true;
+	}
+
+	@Kroll.method
+	public void getAudioProviders() {
+		for (ProviderInfo pi : mediaRouter.getProviders()) {
+			Log.d(LCAT, pi.toString());
+		}
+	}
+
+	@Kroll.method
+	public void getAudioRoutes() {
+		for (RouteInfo ri : mediaRouter.getRoutes()) {
+			Log.d(LCAT, ri.toString());
+		}
+
+	}
 }
