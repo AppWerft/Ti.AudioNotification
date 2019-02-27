@@ -18,8 +18,6 @@ import org.appcelerator.titanium.TiApplication;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.media.MediaRouter;
-import android.support.v7.media.MediaRouter.ProviderInfo;
-import android.support.v7.media.MediaRouter.RouteInfo;
 
 
 @Kroll.module(name = "Tiaudionotification", id = "de.appwerft.audionotification")
