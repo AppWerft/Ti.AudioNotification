@@ -21,6 +21,7 @@ import android.support.v7.media.MediaRouter;
 import android.support.v7.media.MediaRouter.ProviderInfo;
 import android.support.v7.media.MediaRouter.RouteInfo;
 
+
 @Kroll.module(name = "Tiaudionotification", id = "de.appwerft.audionotification")
 public class TiaudionotificationModule extends KrollModule {
 	// A reference to the service used to get location updates.
