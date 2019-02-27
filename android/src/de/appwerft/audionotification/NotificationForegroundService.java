@@ -74,8 +74,9 @@ public class NotificationForegroundService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent==null) {
-			Log.e(LCAT,"intent was null");
+		if (null == intent || null == intent.getAction()) {
+			String source = null == intent ? "intent" : "action";
+			Log.e(LCAT, source + " was null, flags=" + flags + " bits=" + Integer.toBinaryString(flags));
 			return START_STICKY;
 		}
 		Log.d(LCAT, "onStartCommand with action " + intent.getAction());
@@ -142,7 +143,7 @@ public class NotificationForegroundService extends Service {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}
+		} else Log.d(LCAT,"no image found in intent");
 		Notification notification = notificationBuilder.build();
 		// notificationManager.notify(Constants.NOTIFICATION.ID, notification);
 

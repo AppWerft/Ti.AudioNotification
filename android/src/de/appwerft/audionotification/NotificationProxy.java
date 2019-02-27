@@ -101,9 +101,16 @@ public class NotificationProxy extends KrollProxy {
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
 	}
 
+	
+	
 	@Kroll.method
 	public void setImage(String path) {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+		notificationOpts.put(TiC.PROPERTY_IMAGE,  cacheImage(path));
+		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
+			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
+		}	
+		
 		serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
 		serviceIntent.setAction("UPDATE");
 		ctx.startForegroundService(serviceIntent);
