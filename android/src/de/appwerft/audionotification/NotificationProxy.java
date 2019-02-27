@@ -58,6 +58,12 @@ public class NotificationProxy extends KrollProxy {
 		super.handleCreationDict(opts);
 	}
 
+
+	@Kroll.method
+	public void update() {
+		this.show();
+	}
+	
 	@Kroll.method
 	public void show() {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
@@ -69,7 +75,7 @@ public class NotificationProxy extends KrollProxy {
 		if (notificationOpts.containsKey(TiC.PROPERTY_ICON))
 			serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
-			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, cacheImage(notificationOpts.getString(TiC.PROPERTY_IMAGE)));
+			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
 		}	
 		serviceIntent.setAction("CREATE");
 		ctx.startForegroundService(serviceIntent);
@@ -85,36 +91,22 @@ public class NotificationProxy extends KrollProxy {
 
 	@Kroll.method
 	public void setTitle(String title) {
-		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		serviceIntent.putExtra(TiC.PROPERTY_TITLE, title);
-		serviceIntent.setAction("UPDATE");
-		ctx.startForegroundService(serviceIntent);
-		Log.d("LCAT", "startForegroundService(serviceIntent)");
+		notificationOpts.put(TiC.PROPERTY_TITLE,title);
+		show();
 	}
 
 	@Kroll.method
 	public void setSubtitle(String subtitle) {
-		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		serviceIntent.putExtra(TiC.PROPERTY_SUBTITLE, subtitle);
-		serviceIntent.setAction("UPDATE");
-		ctx.startForegroundService(serviceIntent);
-		Log.d("LCAT", "startForegroundService(serviceIntent)");
+		notificationOpts.put(TiC.PROPERTY_SUBTITLE,subtitle);
+		show();
 	}
-
-	
 	
 	@Kroll.method
-	public void setImage(String path) {
-		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+	public void setLargeIcon(String path) {
 		notificationOpts.put(TiC.PROPERTY_IMAGE,  cacheImage(path));
-		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
-			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
-		}	
-		
-		serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
-		serviceIntent.setAction("UPDATE");
-		ctx.startForegroundService(serviceIntent);
+		show();
 	}
+	
 
 	private Bitmap loadImage(String imageName) {
 		Bitmap bitmap = null;

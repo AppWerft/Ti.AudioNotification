@@ -88,10 +88,11 @@ Local<FunctionTemplate> NotificationProxy::getProxyTemplate(Isolate* isolate)
 	// Method bindings --------------------------------------------------------
 	titanium::SetProtoMethod(isolate, t, "hide", NotificationProxy::hide);
 	titanium::SetProtoMethod(isolate, t, "show", NotificationProxy::show);
+	titanium::SetProtoMethod(isolate, t, "update", NotificationProxy::update);
 	titanium::SetProtoMethod(isolate, t, "setTitle", NotificationProxy::setTitle);
 	titanium::SetProtoMethod(isolate, t, "setSubtitle", NotificationProxy::setSubtitle);
 	titanium::SetProtoMethod(isolate, t, "remove", NotificationProxy::remove);
-	titanium::SetProtoMethod(isolate, t, "setImage", NotificationProxy::setImage);
+	titanium::SetProtoMethod(isolate, t, "setLargeIcon", NotificationProxy::setLargeIcon);
 
 	Local<ObjectTemplate> prototypeTemplate = t->PrototypeTemplate();
 	Local<ObjectTemplate> instanceTemplate = t->InstanceTemplate();
@@ -186,6 +187,66 @@ void NotificationProxy::show(const FunctionCallbackInfo<Value>& args)
 		methodID = env->GetMethodID(NotificationProxy::javaClass, "show", "()V");
 		if (!methodID) {
 			const char *error = "Couldn't find proxy method 'show' with signature '()V'";
+			LOGE(TAG, error);
+				titanium::JSException::Error(isolate, error);
+				return;
+		}
+	}
+
+	Local<Object> holder = args.Holder();
+	if (!JavaObject::isJavaObject(holder)) {
+		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
+	}
+	if (holder.IsEmpty() || holder->IsNull()) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	titanium::Proxy* proxy = NativeObject::Unwrap<titanium::Proxy>(holder);
+	if (!proxy) {
+		args.GetReturnValue().Set(Undefined(isolate));
+		return;
+	}
+
+	jvalue* jArguments = 0;
+
+	jobject javaProxy = proxy->getJavaObject();
+	if (javaProxy == NULL) {
+		args.GetReturnValue().Set(v8::Undefined(isolate));
+		return;
+	}
+	env->CallVoidMethodA(javaProxy, methodID, jArguments);
+
+	proxy->unreferenceJavaObject(javaProxy);
+
+
+
+	if (env->ExceptionCheck()) {
+		titanium::JSException::fromJavaException(isolate);
+		env->ExceptionClear();
+	}
+
+
+
+
+	args.GetReturnValue().Set(v8::Undefined(isolate));
+
+}
+void NotificationProxy::update(const FunctionCallbackInfo<Value>& args)
+{
+	LOGD(TAG, "update()");
+	Isolate* isolate = args.GetIsolate();
+	HandleScope scope(isolate);
+
+	JNIEnv *env = titanium::JNIScope::getEnv();
+	if (!env) {
+		titanium::JSException::GetJNIEnvironmentError(isolate);
+		return;
+	}
+	static jmethodID methodID = NULL;
+	if (!methodID) {
+		methodID = env->GetMethodID(NotificationProxy::javaClass, "update", "()V");
+		if (!methodID) {
+			const char *error = "Couldn't find proxy method 'update' with signature '()V'";
 			LOGE(TAG, error);
 				titanium::JSException::Error(isolate, error);
 				return;
@@ -460,9 +521,9 @@ void NotificationProxy::remove(const FunctionCallbackInfo<Value>& args)
 	args.GetReturnValue().Set(v8::Undefined(isolate));
 
 }
-void NotificationProxy::setImage(const FunctionCallbackInfo<Value>& args)
+void NotificationProxy::setLargeIcon(const FunctionCallbackInfo<Value>& args)
 {
-	LOGD(TAG, "setImage()");
+	LOGD(TAG, "setLargeIcon()");
 	Isolate* isolate = args.GetIsolate();
 	HandleScope scope(isolate);
 
@@ -473,9 +534,9 @@ void NotificationProxy::setImage(const FunctionCallbackInfo<Value>& args)
 	}
 	static jmethodID methodID = NULL;
 	if (!methodID) {
-		methodID = env->GetMethodID(NotificationProxy::javaClass, "setImage", "(Ljava/lang/String;)V");
+		methodID = env->GetMethodID(NotificationProxy::javaClass, "setLargeIcon", "(Ljava/lang/String;)V");
 		if (!methodID) {
-			const char *error = "Couldn't find proxy method 'setImage' with signature '(Ljava/lang/String;)V'";
+			const char *error = "Couldn't find proxy method 'setLargeIcon' with signature '(Ljava/lang/String;)V'";
 			LOGE(TAG, error);
 				titanium::JSException::Error(isolate, error);
 				return;
@@ -498,7 +559,7 @@ void NotificationProxy::setImage(const FunctionCallbackInfo<Value>& args)
 
 	if (args.Length() < 1) {
 		char errorStringBuffer[100];
-		sprintf(errorStringBuffer, "setImage: Invalid number of arguments. Expected 1 but got %d", args.Length());
+		sprintf(errorStringBuffer, "setLargeIcon: Invalid number of arguments. Expected 1 but got %d", args.Length());
 		titanium::JSException::Error(isolate, errorStringBuffer);
 		return;
 	}
