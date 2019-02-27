@@ -17,7 +17,7 @@ import org.appcelerator.titanium.TiApplication;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.support.v7.media.MediaRouter;
+import android.media.MediaRouter;
 import android.support.v7.media.MediaRouter.ProviderInfo;
 import android.support.v7.media.MediaRouter.RouteInfo;
 
@@ -55,7 +55,7 @@ public class TiaudionotificationModule extends KrollModule {
 	public TiaudionotificationModule() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
-		mediaRouter = MediaRouter.getInstance(ctx);
+		 mediaRouter = (MediaRouter) ctx.getSystemService(Context.MEDIA_ROUTER_SERVICE);
 	}
 
 	@Kroll.onAppCreate
@@ -73,17 +73,14 @@ public class TiaudionotificationModule extends KrollModule {
 		return true;
 	}
 
-	@Kroll.method
-	public void getAudioProviders() {
-		for (ProviderInfo pi : mediaRouter.getProviders()) {
-			Log.d(LCAT, pi.toString());
-		}
-	}
+	
 
 	@Kroll.method
 	public void getAudioRoutes() {
-		for (RouteInfo ri : mediaRouter.getRoutes()) {
-			Log.d(LCAT, ri.toString());
+		int ndx = mediaRouter.getRouteCount();
+		for (int i=0;i<ndx;i++) {
+			android.media.MediaRouter.RouteInfo ri=  mediaRouter.getRouteAt(i);
+			Log.d(LCAT,ri.toString());
 		}
 	}
 }
