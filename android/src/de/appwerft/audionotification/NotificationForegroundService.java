@@ -74,7 +74,10 @@ public class NotificationForegroundService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (intent==null) return START_STICKY;
+		if (intent==null) {
+			Log.e(LCAT,"intent was null");
+			return START_STICKY;
+		}
 		Log.d(LCAT, "onStartCommand with action " + intent.getAction());
 		if (intent.getAction().equals("CREATE") || intent.getAction().equals("UPDATE")) {
 
