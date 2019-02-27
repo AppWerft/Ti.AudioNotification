@@ -84,6 +84,5 @@ public class TiaudionotificationModule extends KrollModule {
 		for (RouteInfo ri : mediaRouter.getRoutes()) {
 			Log.d(LCAT, ri.toString());
 		}
-
 	}
 }
