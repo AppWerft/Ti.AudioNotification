@@ -17,7 +17,8 @@ import org.appcelerator.titanium.TiApplication;
 
 import android.app.NotificationManager;
 import android.content.Context;
-import android.media.MediaRouter;
+import android.support.v7.media.MediaRouter;
+
 
 
 @Kroll.module(name = "Tiaudionotification", id = "de.appwerft.audionotification")
@@ -75,10 +76,6 @@ public class TiaudionotificationModule extends KrollModule {
 
 	@Kroll.method
 	public void getAudioRoutes() {
-		int ndx = mediaRouter.getRouteCount();
-		for (int i=0;i<ndx;i++) {
-			android.media.MediaRouter.RouteInfo ri=  mediaRouter.getRouteAt(i);
-			Log.d(LCAT,ri.toString());
-		}
+		
 	}
 }
