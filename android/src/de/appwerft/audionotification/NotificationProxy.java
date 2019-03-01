@@ -29,7 +29,7 @@ public class NotificationProxy extends KrollProxy {
 	// Tracks the bound state of the service.
 
 	private KrollDict notificationOpts = new KrollDict();
-	private Bitmap image = null;
+	
 	private boolean notificationactive = false;
 
 	public NotificationProxy() {
@@ -99,19 +99,19 @@ public class NotificationProxy extends KrollProxy {
 	@Kroll.method
 	public void setTitle(String title) {
 		notificationOpts.put(TiC.PROPERTY_TITLE,title);
-		show();
+		update();
 	}
 
 	@Kroll.method
 	public void setSubtitle(String subtitle) {
 		notificationOpts.put(TiC.PROPERTY_SUBTITLE,subtitle);
-		show();
+		update();
 	}
 	
 	@Kroll.method
 	public void setLargeIcon(String path) {
 		notificationOpts.put(TiC.PROPERTY_IMAGE,  cacheImage(path));
-		show();
+		update();
 	}
 	
 
