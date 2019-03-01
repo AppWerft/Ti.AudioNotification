@@ -190,7 +190,7 @@ public class NotificationProxy extends KrollProxy {
 	@Override
 	public void onDestroy(Activity activity) {
 		Log.d(LCAT, "<<<<<< onDestroy called");
-		stop();
+		if (notificationactive)stop();
 		super.onDestroy(activity);
 	}
 
