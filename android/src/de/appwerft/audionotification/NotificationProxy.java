@@ -79,10 +79,10 @@ public class NotificationProxy extends KrollProxy {
 			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
 		}
 		serviceIntent.setAction("CREATE");
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)  {
-		ctx.startForegroundService(serviceIntent);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			ctx.startForegroundService(serviceIntent);
+			Log.d("LCAT", "startForegroundService(serviceIntent)");
 		}
-		Log.d("LCAT", "startForegroundService(serviceIntent)");
 		notificationactive = true;
 	}
 
