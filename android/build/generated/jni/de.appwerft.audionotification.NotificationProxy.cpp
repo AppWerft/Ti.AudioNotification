@@ -138,6 +138,7 @@ void NotificationProxy::hide(const FunctionCallbackInfo<Value>& args)
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}
@@ -198,6 +199,7 @@ void NotificationProxy::stop(const FunctionCallbackInfo<Value>& args)
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}
@@ -258,6 +260,7 @@ void NotificationProxy::start(const FunctionCallbackInfo<Value>& args)
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}
@@ -318,6 +321,7 @@ void NotificationProxy::update(const FunctionCallbackInfo<Value>& args)
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}
@@ -378,6 +382,7 @@ void NotificationProxy::setTitle(const FunctionCallbackInfo<Value>& args)
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}
@@ -463,6 +468,7 @@ void NotificationProxy::setSubtitle(const FunctionCallbackInfo<Value>& args)
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}
@@ -548,6 +554,7 @@ void NotificationProxy::setLargeIcon(const FunctionCallbackInfo<Value>& args)
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}

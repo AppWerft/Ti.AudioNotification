@@ -18,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
+import android.os.Build;
 
 @Kroll.proxy(creatableInModule = TiaudionotificationModule.class)
 public class NotificationProxy extends KrollProxy {
@@ -29,7 +30,7 @@ public class NotificationProxy extends KrollProxy {
 	// Tracks the bound state of the service.
 
 	private KrollDict notificationOpts = new KrollDict();
-	
+
 	private boolean notificationactive = false;
 
 	public NotificationProxy() {
@@ -55,10 +56,9 @@ public class NotificationProxy extends KrollProxy {
 			notificationOpts.put(TiC.PROPERTY_ICON, opts.getString(TiC.PROPERTY_ICON));
 		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE)) {
 			notificationOpts.put(TiC.PROPERTY_IMAGE, getImagePath(opts.getString(TiC.PROPERTY_IMAGE)));
-		}	
+		}
 		super.handleCreationDict(opts);
 	}
-
 
 	@Kroll.method
 	public void update() {
@@ -68,7 +68,7 @@ public class NotificationProxy extends KrollProxy {
 	@Kroll.method
 	public void start() {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		Log.d(LCAT,"show::" +notificationOpts.toString());
+		Log.d(LCAT, "show::" + notificationOpts.toString());
 		if (notificationOpts.containsKey(TiC.PROPERTY_TITLE))
 			serviceIntent.putExtra(TiC.PROPERTY_TITLE, notificationOpts.getString(TiC.PROPERTY_TITLE));
 		if (notificationOpts.containsKey(TiC.PROPERTY_SUBTITLE))
@@ -77,43 +77,44 @@ public class NotificationProxy extends KrollProxy {
 			serviceIntent.putExtra(TiC.PROPERTY_ICON, notificationOpts.getString(TiC.PROPERTY_ICON));
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
 			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
-		}	
+		}
 		serviceIntent.setAction("CREATE");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)  {
 		ctx.startForegroundService(serviceIntent);
+		}
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
-		notificationactive=true;
+		notificationactive = true;
 	}
-
 
 	@Kroll.method
 	public void stop() {
 		if (notificationactive) {
-		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		serviceIntent.setAction("REMOVE");
-		ctx.startForegroundService(serviceIntent);
-		notificationactive=false;
+			Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
+			serviceIntent.setAction("startfore");
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+				ctx.startForegroundService(serviceIntent);
+			}
+			notificationactive = false;
+		}
 	}
-	}
-	
 
 	@Kroll.method
 	public void setTitle(String title) {
-		notificationOpts.put(TiC.PROPERTY_TITLE,title);
+		notificationOpts.put(TiC.PROPERTY_TITLE, title);
 		update();
 	}
 
 	@Kroll.method
 	public void setSubtitle(String subtitle) {
-		notificationOpts.put(TiC.PROPERTY_SUBTITLE,subtitle);
+		notificationOpts.put(TiC.PROPERTY_SUBTITLE, subtitle);
 		update();
 	}
-	
+
 	@Kroll.method
 	public void setLargeIcon(String path) {
-		notificationOpts.put(TiC.PROPERTY_IMAGE,  cacheImage(path));
+		notificationOpts.put(TiC.PROPERTY_IMAGE, cacheImage(path));
 		update();
 	}
-	
 
 	private Bitmap loadImage(String imageName) {
 		Bitmap bitmap = null;
@@ -125,29 +126,29 @@ public class NotificationProxy extends KrollProxy {
 			return null;
 		}
 	}
+
 	private String cacheImage(String imageName) {
 		Bitmap bmp = loadImage(imageName);
 		try {
-		    //Write file
-		    String filename = "logo-bitmap.png";
-		    FileOutputStream stream = ctx.openFileOutput(filename, Context.MODE_PRIVATE);
-		    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-		    //Cleanup
-		    stream.close();
-		    bmp.recycle();
-		    return filename;
-		    //Pop intent
+			// Write file
+			String filename = "logo-bitmap.png";
+			FileOutputStream stream = ctx.openFileOutput(filename, Context.MODE_PRIVATE);
+			bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+			// Cleanup
+			stream.close();
+			bmp.recycle();
+			return filename;
+			// Pop intent
 		} catch (Exception e) {
-		//    e.printStackTrace();
-		    return null;
+			// e.printStackTrace();
+			return null;
 		}
-		
-		
+
 	}
-	
+
 	private String getImagePath(String imageName) {
 		TiBaseFile file = TiFileFactory.createTitaniumFile(new String[] { resolveUrl(null, imageName) }, false);
-		return file.nativePath();	
+		return file.nativePath();
 	}
 
 	@Kroll.method
@@ -190,7 +191,8 @@ public class NotificationProxy extends KrollProxy {
 	@Override
 	public void onDestroy(Activity activity) {
 		Log.d(LCAT, "<<<<<< onDestroy called");
-		if (notificationactive)stop();
+		if (notificationactive)
+			stop();
 		super.onDestroy(activity);
 	}
 

@@ -169,6 +169,7 @@ void TiaudionotificationModule::setAudioDestination(const FunctionCallbackInfo<V
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}
@@ -256,6 +257,7 @@ void TiaudionotificationModule::getAudioRoutes(const FunctionCallbackInfo<Value>
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}
@@ -316,6 +318,7 @@ void TiaudionotificationModule::isBluetootAvailable(const FunctionCallbackInfo<V
 		holder = holder->FindInstanceInPrototypeChain(getProxyTemplate(isolate));
 	}
 	if (holder.IsEmpty() || holder->IsNull()) {
+		LOGE(TAG, "Couldn't obtain argument holder");
 		args.GetReturnValue().Set(v8::Undefined(isolate));
 		return;
 	}

@@ -8,11 +8,8 @@
  */
 package de.appwerft.audionotification;
 
-import java.util.List;
-
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
-import org.appcelerator.kroll.common.Log;
 import org.appcelerator.titanium.TiApplication;
 
 import android.app.NotificationManager;
