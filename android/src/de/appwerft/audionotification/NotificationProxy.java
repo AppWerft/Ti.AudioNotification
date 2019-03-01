@@ -30,6 +30,7 @@ public class NotificationProxy extends KrollProxy {
 
 	private KrollDict notificationOpts = new KrollDict();
 	private Bitmap image = null;
+	private boolean notificationactive = false;
 
 	public NotificationProxy() {
 		super();
@@ -61,11 +62,11 @@ public class NotificationProxy extends KrollProxy {
 
 	@Kroll.method
 	public void update() {
-		this.show();
+		this.start();
 	}
-	
+
 	@Kroll.method
-	public void show() {
+	public void start() {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
 		Log.d(LCAT,"show::" +notificationOpts.toString());
 		if (notificationOpts.containsKey(TiC.PROPERTY_TITLE))
@@ -80,14 +81,20 @@ public class NotificationProxy extends KrollProxy {
 		serviceIntent.setAction("CREATE");
 		ctx.startForegroundService(serviceIntent);
 		Log.d("LCAT", "startForegroundService(serviceIntent)");
+		notificationactive=true;
 	}
 
+
 	@Kroll.method
-	public void remove() {
+	public void stop() {
+		if (notificationactive) {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
 		serviceIntent.setAction("REMOVE");
 		ctx.startForegroundService(serviceIntent);
+		notificationactive=false;
 	}
+	}
+	
 
 	@Kroll.method
 	public void setTitle(String title) {
