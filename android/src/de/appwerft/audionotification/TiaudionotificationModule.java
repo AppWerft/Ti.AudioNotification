@@ -52,7 +52,6 @@ public class TiaudionotificationModule extends KrollModule {
 	public TiaudionotificationModule() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
-		 mediaRouter = (MediaRouter) ctx.getSystemService(Context.MEDIA_ROUTER_SERVICE);
 	}
 
 	@Kroll.onAppCreate
