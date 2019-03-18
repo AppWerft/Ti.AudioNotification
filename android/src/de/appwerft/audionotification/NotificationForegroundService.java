@@ -96,7 +96,7 @@ public class NotificationForegroundService extends Service {
 			if (intent.hasExtra(TiC.PROPERTY_IMAGE)) {
 				notificationOpts.put(TiC.PROPERTY_IMAGE, intent.getStringExtra(TiC.PROPERTY_IMAGE));
 			}
-			if (isOreo) {
+			if (TiaudionotificationModule.isOreo) {
 				startForeground(Constants.NOTIFICATION.ID, getNotification());
 				Log.d(LCAT, "startForeground() started");
 			} else {
