@@ -107,7 +107,9 @@ public class NotificationForegroundService extends Service {
 			when = System.currentTimeMillis();
 		}
 		if (intent.getAction().equals(Constants.ACTION.REMOVE)) {
+			Log.d(LCAT,"ACTION=REMOVE");
 			if (TiaudionotificationModule.isOreo) {
+				Log.d(LCAT,"ACTION=REMOVE isOreo");
 				stopForeground(true);
 				stopSelf();
 			} else {
@@ -137,7 +139,7 @@ public class NotificationForegroundService extends Service {
 				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(getPendingIntent());
 		// Set the Channel ID for Android O.
 		Log.d(LCAT, "getNotification adding ChannelId");
-		if (TiaudionotificationModule.isOreo) {
+		if (TiaudionotificationModule.		isOreo) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
