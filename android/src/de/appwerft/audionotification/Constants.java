@@ -10,8 +10,10 @@ public class Constants {
 		public static String PREV_ACTION = "de.appwerft.foregroundservice.action.prev";
 		public static String PLAY_ACTION = "de.appwerft.foregroundservice.action.play";
 		public static String NEXT_ACTION = "de.appwerft.foregroundservice.action.next";
-		public static String STARTFOREGROUND_ACTION = "de.appwerft.foregroundservice.action.startforeground";
-		public static String STOPFOREGROUND_ACTION = "de.appwerft.foregroundservice.action.stopforeground";
+		public static String CREATE = "de.appwerft.foregroundservice.action.create";
+		public static String UPDATE = "de.appwerft.foregroundservice.action.update";
+		public static String REMOVE = "de.appwerft.foregroundservice.action.remove";
+		
 	}
 
 	public interface MSG {

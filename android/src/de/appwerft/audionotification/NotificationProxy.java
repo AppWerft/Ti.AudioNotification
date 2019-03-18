@@ -38,7 +38,24 @@ public class NotificationProxy extends KrollProxy {
 		ctx = TiApplication.getInstance().getApplicationContext();
 
 	}
+	public NotificationProxy(KrollDict opts) {
+		super();
+		ctx = TiApplication.getInstance().getApplicationContext();
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE))
+			notificationOpts.put(TiC.PROPERTY_TITLE, opts.getString(TiC.PROPERTY_TITLE));
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_LIFECYCLE_CONTAINER))
+			notificationOpts.put(TiC.PROPERTY_LIFECYCLE_CONTAINER, opts.get(TiC.PROPERTY_LIFECYCLE_CONTAINER));
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE))
+			notificationOpts.put(TiC.PROPERTY_SUBTITLE, opts.getString(TiC.PROPERTY_SUBTITLE));
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_ICON))
+			notificationOpts.put(TiC.PROPERTY_ICON, opts.getString(TiC.PROPERTY_ICON));
+		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE)) {
+			notificationOpts.put(TiC.PROPERTY_IMAGE, getImagePath(opts.getString(TiC.PROPERTY_IMAGE)));
+		}
+        
+	}
 
+	
 	@Kroll.onAppCreate
 	public static void onAppCreate(TiApplication app) {
 
@@ -78,8 +95,8 @@ public class NotificationProxy extends KrollProxy {
 		if (notificationOpts.containsKey(TiC.PROPERTY_IMAGE)) {
 			serviceIntent.putExtra(TiC.PROPERTY_IMAGE, notificationOpts.getString(TiC.PROPERTY_IMAGE));
 		}
-		serviceIntent.setAction("CREATE");
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		serviceIntent.setAction(Constants.ACTION.CREATE);
+		if (TiaudionotificationModule.isOreo) {
 			ctx.startForegroundService(serviceIntent);
 			Log.d("LCAT", "startForegroundService(serviceIntent)");
 		}
@@ -90,8 +107,8 @@ public class NotificationProxy extends KrollProxy {
 	public void stop() {
 		if (notificationactive) {
 			Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-			serviceIntent.setAction("startfore");
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+			serviceIntent.setAction(Constants.ACTION.REMOVE);
+			if (TiaudionotificationModule.isOreo) {
 				ctx.startForegroundService(serviceIntent);
 			}
 			notificationactive = false;

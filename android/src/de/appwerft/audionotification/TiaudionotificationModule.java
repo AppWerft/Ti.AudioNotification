@@ -8,19 +8,21 @@
  */
 package de.appwerft.audionotification;
 
+import org.appcelerator.kroll.KrollDict;
 import org.appcelerator.kroll.KrollModule;
 import org.appcelerator.kroll.annotations.Kroll;
 import org.appcelerator.titanium.TiApplication;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.media.MediaRouter;
 
 @Kroll.module(name = "Tiaudionotification", id = "de.appwerft.audionotification")
 public class TiaudionotificationModule extends KrollModule {
 	// A reference to the service used to get location updates.
 	public static final String LCAT = "🎈TiAudioNot";
-
+	public static boolean isOreo = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) ? true : false;
 	@Kroll.constant
 	public static final int NOTIFICATION_IMPORTANCE_DEFAULT = NotificationManager.IMPORTANCE_DEFAULT;
 	@Kroll.constant
@@ -45,6 +47,15 @@ public class TiaudionotificationModule extends KrollModule {
 	public static final int AUDIO_EARPIECE = 3;
 	private MediaRouter mediaRouter;
 	private Context ctx;
+	private NotificationProxy proxy=null;
+
+	public NotificationProxy Notification(KrollDict opts) {
+		if (this.proxy==null) {
+			this.proxy = new NotificationProxy(opts);
+		}
+		return this.proxy;
+		
+	}
 
 	public TiaudionotificationModule() {
 		super();
@@ -66,10 +77,8 @@ public class TiaudionotificationModule extends KrollModule {
 		return true;
 	}
 
-	
-
 	@Kroll.method
 	public void getAudioRoutes() {
-		
+
 	}
 }

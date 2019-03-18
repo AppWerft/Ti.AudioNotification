@@ -4,7 +4,6 @@
 "/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/src/de/appwerft/audionotification/NotificationProxy.java"
 "/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/src/de/appwerft/audionotification/TiaudionotificationModule.java"
 "/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/src/de/appwerft/audionotification/Utils.java"
-"/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/build/generated/java/de/appwerft/audionotification/TiaudionotificationBootstrap.java"
 "/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/build/generated/r/android/support/compat/R.java"
 "/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/build/generated/r/android/support/coreui/R.java"
 "/Users/fuerst/Documents/APPC_WORKSPACE/AUDIO/Ti.AudioNotification/android/build/generated/r/android/support/coreutils/R.java"

@@ -39,6 +39,7 @@ public class NotificationForegroundService extends Service {
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts = new KrollDict();
 	private long when = 0;
+	
 
 	public NotificationForegroundService() {
 		super();
@@ -53,7 +54,7 @@ public class NotificationForegroundService extends Service {
 		Log.d(LCAT, "onCreate");
 		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		// Android O requires a Notification Channel.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		if (TiaudionotificationModule.isOreo) {
 			// Create the channel for the notification
 			NotificationChannel notificationChannel = new NotificationChannel(Constants.NOTIFICATION.CHANNELID,
 					TiApplication.getInstance().getPackageName(), NotificationManager.IMPORTANCE_LOW);
@@ -95,15 +96,23 @@ public class NotificationForegroundService extends Service {
 			if (intent.hasExtra(TiC.PROPERTY_IMAGE)) {
 				notificationOpts.put(TiC.PROPERTY_IMAGE, intent.getStringExtra(TiC.PROPERTY_IMAGE));
 			}
-			startForeground(Constants.NOTIFICATION.ID, getNotification());
-			Log.d(LCAT, "startForeground() started");
+			if (isOreo) {
+				startForeground(Constants.NOTIFICATION.ID, getNotification());
+				Log.d(LCAT, "startForeground() started");
+			} else {
+				notificationManager.notify(Constants.NOTIFICATION.ID, getNotification());
+			}
 		}
-		if (intent.getAction().equals("CREATE")) {
+		if (intent.getAction().equals(Constants.ACTION.CREATE)) {
 			when = System.currentTimeMillis();
 		}
-		if (intent.getAction().equals("REMOVE")) {
-			stopForeground(true);
-			stopSelf();
+		if (intent.getAction().equals(Constants.ACTION.REMOVE)) {
+			if (TiaudionotificationModule.isOreo) {
+				stopForeground(true);
+				stopSelf();
+			} else {
+				notificationManager.cancel(Constants.NOTIFICATION.ID);
+			}
 		}
 		Log.d(LCAT, notificationOpts.toString());
 
@@ -128,7 +137,7 @@ public class NotificationForegroundService extends Service {
 				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(getPendingIntent());
 		// Set the Channel ID for Android O.
 		Log.d(LCAT, "getNotification adding ChannelId");
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+		if (isOreo) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
@@ -143,7 +152,8 @@ public class NotificationForegroundService extends Service {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		} else Log.d(LCAT,"no image found in intent");
+		} else
+			Log.d(LCAT, "no image found in intent");
 		Notification notification = notificationBuilder.build();
 		// notificationManager.notify(Constants.NOTIFICATION.ID, notification);
 
