@@ -137,7 +137,7 @@ public class NotificationForegroundService extends Service {
 				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(getPendingIntent());
 		// Set the Channel ID for Android O.
 		Log.d(LCAT, "getNotification adding ChannelId");
-		if (isOreo) {
+		if (TiaudionotificationModule.isOreo) {
 			// buildersetChannel(Constants.NOTIFICATION.CHANNELID);
 			notificationBuilder.setChannelId(Constants.NOTIFICATION.CHANNELID); // Channel ID
 		}
