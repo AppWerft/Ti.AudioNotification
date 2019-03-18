@@ -47,14 +47,18 @@ public class TiaudionotificationModule extends KrollModule {
 	public static final int AUDIO_EARPIECE = 3;
 	private MediaRouter mediaRouter;
 	private Context ctx;
-	private NotificationProxy proxy=null;
+	private NotificationProxy proxy = null;
 
+	public boolean isOreo() {
+	return (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O);
+	}
+	
 	public NotificationProxy Notification(KrollDict opts) {
-		if (this.proxy==null) {
-			this.proxy = new NotificationProxy(opts);
-		}
+			if (this.proxy == null) {
+				this.proxy = new NotificationProxy(opts);
+			}
 		return this.proxy;
-		
+
 	}
 
 	public TiaudionotificationModule() {
