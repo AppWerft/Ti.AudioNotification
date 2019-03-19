@@ -101,7 +101,7 @@ public class NotificationProxy extends KrollProxy {
 				ctx.startForegroundService(serviceIntent);
 			}
 			notificationactive = false;
-		}
+		} else Log.w(LCAT,"should stopp, but notificationactive was false !!!!!" );
 	}
 
 	@Kroll.method
