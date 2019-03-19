@@ -100,9 +100,10 @@ public class NotificationForegroundService extends Service {
 			}
 			if (isOreo == true) {
 				startForeground(Constants.NOTIFICATION.ID, getNotification());
-				Log.d(LCAT, "startForeground() started");
+				Log.d(LCAT, "startForeground() started >>>");
 			} else {
 				notificationManager.notify(Constants.NOTIFICATION.ID, getNotification());
+				Log.d(LCAT, " notificationManager.notify started >>>");
 			}
 		}
 		if (intent.getAction().equals(Constants.ACTION.CREATE)) {
