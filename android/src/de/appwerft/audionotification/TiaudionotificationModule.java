@@ -22,7 +22,7 @@ import android.support.v7.media.MediaRouter;
 public class TiaudionotificationModule extends KrollModule {
 	// A reference to the service used to get location updates.
 	public static final String LCAT = "🎈TiAudioNot";
-	public static final boolean isOreo = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O);
+	public static boolean isOreo;
 	@Kroll.constant
 	public static final int NOTIFICATION_IMPORTANCE_DEFAULT = NotificationManager.IMPORTANCE_DEFAULT;
 	@Kroll.constant
@@ -48,12 +48,11 @@ public class TiaudionotificationModule extends KrollModule {
 	private MediaRouter mediaRouter;
 	private Context ctx;
 	private NotificationProxy proxy = null;
-	
-	
+
 	public NotificationProxy Notification(KrollDict opts) {
-			if (this.proxy == null) {
-				this.proxy = new NotificationProxy(opts);
-			}
+		if (this.proxy == null) {
+			this.proxy = new NotificationProxy(opts);
+		}
 		return this.proxy;
 
 	}
@@ -61,6 +60,7 @@ public class TiaudionotificationModule extends KrollModule {
 	public TiaudionotificationModule() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
+		isOreo = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O);
 	}
 
 	@Kroll.onAppCreate

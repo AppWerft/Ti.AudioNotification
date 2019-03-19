@@ -85,7 +85,6 @@ public class NotificationProxy extends KrollProxy {
 	@Kroll.method
 	public void start() {
 		Intent serviceIntent = new Intent(ctx, NotificationForegroundService.class);
-		Log.d(LCAT, "show::" + notificationOpts.toString());
 		if (notificationOpts.containsKey(TiC.PROPERTY_TITLE))
 			serviceIntent.putExtra(TiC.PROPERTY_TITLE, notificationOpts.getString(TiC.PROPERTY_TITLE));
 		if (notificationOpts.containsKey(TiC.PROPERTY_SUBTITLE))
@@ -97,8 +96,12 @@ public class NotificationProxy extends KrollProxy {
 		}
 		serviceIntent.setAction(Constants.ACTION.CREATE);
 		if (TiaudionotificationModule.isOreo) {
+			Log.d(LCAT,"Orea: ctx.startForegroundService");
 			ctx.startForegroundService(serviceIntent);
 			Log.d("LCAT", "startForegroundService(serviceIntent)");
+		} else {
+			Log.d(LCAT,"preOrea: ctx.startService");
+			ctx.startService(serviceIntent);
 		}
 		notificationactive = true;
 	}
