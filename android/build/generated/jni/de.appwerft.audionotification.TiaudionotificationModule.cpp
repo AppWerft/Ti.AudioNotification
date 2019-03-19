@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2017 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2018 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -58,7 +58,7 @@ void TiaudionotificationModule::bindProxy(Local<Object> exports, Local<Context> 
 		titanium::V8Util::fatalException(isolate, tryCatch);
 		return;
 	}
-	exports->Set(nameSymbol, moduleInstance);
+	exports->Set(context, nameSymbol, moduleInstance);
 }
 
 void TiaudionotificationModule::dispose(Isolate* isolate)
@@ -71,8 +71,9 @@ void TiaudionotificationModule::dispose(Isolate* isolate)
 	titanium::KrollModule::dispose(isolate);
 }
 
-Local<FunctionTemplate> TiaudionotificationModule::getProxyTemplate(Isolate* isolate)
+Local<FunctionTemplate> TiaudionotificationModule::getProxyTemplate(v8::Isolate* isolate)
 {
+	Local<Context> context = isolate->GetCurrentContext();
 	if (!proxyTemplate.IsEmpty()) {
 		return proxyTemplate.Get(isolate);
 	}
@@ -85,13 +86,14 @@ Local<FunctionTemplate> TiaudionotificationModule::getProxyTemplate(Isolate* iso
 	// use symbol over string for efficiency
 	Local<String> nameSymbol = NEW_SYMBOL(isolate, "Tiaudionotification");
 
-	Local<FunctionTemplate> t = titanium::Proxy::inheritProxyTemplate(isolate,
-		titanium::KrollModule::getProxyTemplate(isolate)
-, javaClass, nameSymbol);
+	Local<FunctionTemplate> t = titanium::Proxy::inheritProxyTemplate(
+		isolate,
+		titanium::KrollModule::getProxyTemplate(isolate),
+		javaClass,
+		nameSymbol);
 
 	proxyTemplate.Reset(isolate, t);
-	t->Set(titanium::Proxy::inheritSymbol.Get(isolate),
-		FunctionTemplate::New(isolate, titanium::Proxy::inherit<TiaudionotificationModule>));
+	t->Set(titanium::Proxy::inheritSymbol.Get(isolate), FunctionTemplate::New(isolate, titanium::Proxy::inherit<TiaudionotificationModule>));
 
 	// Method bindings --------------------------------------------------------
 	titanium::SetProtoMethod(isolate, t, "setAudioDestination", TiaudionotificationModule::setAudioDestination);
@@ -141,11 +143,17 @@ Local<FunctionTemplate> TiaudionotificationModule::getProxyTemplate(Isolate* iso
 	return scope.Escape(t);
 }
 
+Local<FunctionTemplate> TiaudionotificationModule::getProxyTemplate(v8::Local<v8::Context> context)
+{
+	return getProxyTemplate(context->GetIsolate());
+}
+
 // Methods --------------------------------------------------------------------
 void TiaudionotificationModule::setAudioDestination(const FunctionCallbackInfo<Value>& args)
 {
 	LOGD(TAG, "setAudioDestination()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -192,21 +200,28 @@ void TiaudionotificationModule::setAudioDestination(const FunctionCallbackInfo<V
 
 
 	
-
-		if ((titanium::V8Util::isNaN(isolate, args[0]) && !args[0]->IsUndefined()) || args[0]->ToString(isolate)->Length() == 0) {
+		if ((titanium::V8Util::isNaN(isolate, args[0]) && !args[0]->IsUndefined()) || args[0]->ToString(context).FromMaybe(String::Empty(isolate))->Length() == 0) {
 			const char *error = "Invalid value, expected type Number.";
 			LOGE(TAG, error);
 			titanium::JSException::Error(isolate, error);
 			return;
 		}
-	if (!args[0]->IsNull()) {
-		Local<Number> arg_0 = args[0]->ToNumber(isolate);
-		jArguments[0].i =
-			titanium::TypeConverter::jsNumberToJavaInt(
-				env, arg_0);
+		if (!args[0]->IsNull()) {
+		MaybeLocal<Number> arg_0 = args[0]->ToNumber(context);
+		if (arg_0.IsEmpty()) {
+			const char *error = "Invalid argument at index 0, expected type Number and failed to coerce.";
+			LOGE(TAG, error);
+			titanium::JSException::Error(isolate, error);
+			return;
+		} else {
+			jArguments[0].i =
+				titanium::TypeConverter::jsNumberToJavaInt(
+					env, arg_0.ToLocalChecked());
+		}
 	} else {
 		jArguments[0].i = NULL;
 	}
+
 
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {
@@ -234,6 +249,7 @@ void TiaudionotificationModule::getAudioRoutes(const FunctionCallbackInfo<Value>
 {
 	LOGD(TAG, "getAudioRoutes()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -269,6 +285,7 @@ void TiaudionotificationModule::getAudioRoutes(const FunctionCallbackInfo<Value>
 
 	jvalue* jArguments = 0;
 
+
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {
 		args.GetReturnValue().Set(v8::Undefined(isolate));
@@ -295,6 +312,7 @@ void TiaudionotificationModule::isBluetootAvailable(const FunctionCallbackInfo<V
 {
 	LOGD(TAG, "isBluetootAvailable()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -329,6 +347,7 @@ void TiaudionotificationModule::isBluetootAvailable(const FunctionCallbackInfo<V
 	}
 
 	jvalue* jArguments = 0;
+
 
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {

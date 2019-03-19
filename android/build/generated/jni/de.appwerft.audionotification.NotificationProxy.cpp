@@ -1,6 +1,6 @@
 /**
  * Appcelerator Titanium Mobile
- * Copyright (c) 2011-2017 by Appcelerator, Inc. All Rights Reserved.
+ * Copyright (c) 2011-2018 by Appcelerator, Inc. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -50,7 +50,7 @@ void NotificationProxy::bindProxy(Local<Object> exports, Local<Context> context)
 	}
 
 	Local<String> nameSymbol = NEW_SYMBOL(isolate, "Notification"); // use symbol over string for efficiency
-	exports->Set(nameSymbol, constructor);
+	exports->Set(context, nameSymbol, constructor);
 }
 
 void NotificationProxy::dispose(Isolate* isolate)
@@ -63,8 +63,9 @@ void NotificationProxy::dispose(Isolate* isolate)
 	titanium::KrollProxy::dispose(isolate);
 }
 
-Local<FunctionTemplate> NotificationProxy::getProxyTemplate(Isolate* isolate)
+Local<FunctionTemplate> NotificationProxy::getProxyTemplate(v8::Isolate* isolate)
 {
+	Local<Context> context = isolate->GetCurrentContext();
 	if (!proxyTemplate.IsEmpty()) {
 		return proxyTemplate.Get(isolate);
 	}
@@ -77,13 +78,14 @@ Local<FunctionTemplate> NotificationProxy::getProxyTemplate(Isolate* isolate)
 	// use symbol over string for efficiency
 	Local<String> nameSymbol = NEW_SYMBOL(isolate, "Notification");
 
-	Local<FunctionTemplate> t = titanium::Proxy::inheritProxyTemplate(isolate,
-		titanium::KrollProxy::getProxyTemplate(isolate)
-, javaClass, nameSymbol);
+	Local<FunctionTemplate> t = titanium::Proxy::inheritProxyTemplate(
+		isolate,
+		titanium::KrollProxy::getProxyTemplate(isolate),
+		javaClass,
+		nameSymbol);
 
 	proxyTemplate.Reset(isolate, t);
-	t->Set(titanium::Proxy::inheritSymbol.Get(isolate),
-		FunctionTemplate::New(isolate, titanium::Proxy::inherit<NotificationProxy>));
+	t->Set(titanium::Proxy::inheritSymbol.Get(isolate), FunctionTemplate::New(isolate, titanium::Proxy::inherit<NotificationProxy>));
 
 	// Method bindings --------------------------------------------------------
 	titanium::SetProtoMethod(isolate, t, "hide", NotificationProxy::hide);
@@ -110,11 +112,17 @@ Local<FunctionTemplate> NotificationProxy::getProxyTemplate(Isolate* isolate)
 	return scope.Escape(t);
 }
 
+Local<FunctionTemplate> NotificationProxy::getProxyTemplate(v8::Local<v8::Context> context)
+{
+	return getProxyTemplate(context->GetIsolate());
+}
+
 // Methods --------------------------------------------------------------------
 void NotificationProxy::hide(const FunctionCallbackInfo<Value>& args)
 {
 	LOGD(TAG, "hide()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -150,6 +158,7 @@ void NotificationProxy::hide(const FunctionCallbackInfo<Value>& args)
 
 	jvalue* jArguments = 0;
 
+
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {
 		args.GetReturnValue().Set(v8::Undefined(isolate));
@@ -176,6 +185,7 @@ void NotificationProxy::stop(const FunctionCallbackInfo<Value>& args)
 {
 	LOGD(TAG, "stop()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -211,6 +221,7 @@ void NotificationProxy::stop(const FunctionCallbackInfo<Value>& args)
 
 	jvalue* jArguments = 0;
 
+
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {
 		args.GetReturnValue().Set(v8::Undefined(isolate));
@@ -237,6 +248,7 @@ void NotificationProxy::start(const FunctionCallbackInfo<Value>& args)
 {
 	LOGD(TAG, "start()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -272,6 +284,7 @@ void NotificationProxy::start(const FunctionCallbackInfo<Value>& args)
 
 	jvalue* jArguments = 0;
 
+
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {
 		args.GetReturnValue().Set(v8::Undefined(isolate));
@@ -298,6 +311,7 @@ void NotificationProxy::update(const FunctionCallbackInfo<Value>& args)
 {
 	LOGD(TAG, "update()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -333,6 +347,7 @@ void NotificationProxy::update(const FunctionCallbackInfo<Value>& args)
 
 	jvalue* jArguments = 0;
 
+
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {
 		args.GetReturnValue().Set(v8::Undefined(isolate));
@@ -359,6 +374,7 @@ void NotificationProxy::setTitle(const FunctionCallbackInfo<Value>& args)
 {
 	LOGD(TAG, "setTitle()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -405,7 +421,6 @@ void NotificationProxy::setTitle(const FunctionCallbackInfo<Value>& args)
 
 
 	
-
 	if (!args[0]->IsNull()) {
 		Local<Value> arg_0 = args[0];
 		jArguments[0].l =
@@ -415,6 +430,7 @@ void NotificationProxy::setTitle(const FunctionCallbackInfo<Value>& args)
 	} else {
 		jArguments[0].l = NULL;
 	}
+
 
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {
@@ -445,6 +461,7 @@ void NotificationProxy::setSubtitle(const FunctionCallbackInfo<Value>& args)
 {
 	LOGD(TAG, "setSubtitle()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -491,7 +508,6 @@ void NotificationProxy::setSubtitle(const FunctionCallbackInfo<Value>& args)
 
 
 	
-
 	if (!args[0]->IsNull()) {
 		Local<Value> arg_0 = args[0];
 		jArguments[0].l =
@@ -501,6 +517,7 @@ void NotificationProxy::setSubtitle(const FunctionCallbackInfo<Value>& args)
 	} else {
 		jArguments[0].l = NULL;
 	}
+
 
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {
@@ -531,6 +548,7 @@ void NotificationProxy::setLargeIcon(const FunctionCallbackInfo<Value>& args)
 {
 	LOGD(TAG, "setLargeIcon()");
 	Isolate* isolate = args.GetIsolate();
+	Local<Context> context = isolate->GetCurrentContext();
 	HandleScope scope(isolate);
 
 	JNIEnv *env = titanium::JNIScope::getEnv();
@@ -577,7 +595,6 @@ void NotificationProxy::setLargeIcon(const FunctionCallbackInfo<Value>& args)
 
 
 	
-
 	if (!args[0]->IsNull()) {
 		Local<Value> arg_0 = args[0];
 		jArguments[0].l =
@@ -587,6 +604,7 @@ void NotificationProxy::setLargeIcon(const FunctionCallbackInfo<Value>& args)
 	} else {
 		jArguments[0].l = NULL;
 	}
+
 
 	jobject javaProxy = proxy->getJavaObject();
 	if (javaProxy == NULL) {

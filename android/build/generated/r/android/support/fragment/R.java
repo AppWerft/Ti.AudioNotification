@@ -3370,16 +3370,16 @@ containing a value of this type.
         public static int select_dialog_multichoice_material=0x7f030039;
         public static int select_dialog_singlechoice_material=0x7f03003a;
         public static int support_simple_spinner_dropdown_item=0x7f03003b;
-        public static int titanium_tabgroup=0x7f03003c;
-        public static int titanium_ui_checkbox=0x7f03003d;
-        public static int titanium_ui_date_picker_spinner=0x7f03003e;
-        public static int titanium_ui_drawer_layout=0x7f03003f;
-        public static int titanium_ui_edittext=0x7f030040;
-        public static int titanium_ui_list_header_or_footer=0x7f030041;
-        public static int titanium_ui_list_item=0x7f030042;
-        public static int titanium_ui_spinner=0x7f030043;
-        public static int titanium_ui_switchcompat=0x7f030044;
-        public static int titanium_ui_time_picker_spinner=0x7f030045;
+        public static int titanium_ui_checkbox=0x7f03003c;
+        public static int titanium_ui_date_picker_spinner=0x7f03003d;
+        public static int titanium_ui_drawer_layout=0x7f03003e;
+        public static int titanium_ui_edittext=0x7f03003f;
+        public static int titanium_ui_list_header_or_footer=0x7f030040;
+        public static int titanium_ui_list_item=0x7f030041;
+        public static int titanium_ui_spinner=0x7f030042;
+        public static int titanium_ui_switchcompat=0x7f030043;
+        public static int titanium_ui_time_picker_spinner=0x7f030044;
+        public static int titanium_ui_toolbar=0x7f030045;
     }
     public static final class string {
         public static int abc_action_bar_home_description=0x7f070000;
