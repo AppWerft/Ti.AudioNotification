@@ -82,8 +82,8 @@ public class NotificationForegroundService extends Service {
 			Log.e(LCAT, source + " was null, flags=" + flags + " bits=" + Integer.toBinaryString(flags));
 			return START_STICKY;
 		}
-		Log.d(LCAT, "onStartCommand with action :: " + intent.getAction());
-		if (intent.getAction().equals("CREATE") || intent.getAction().equals("UPDATE")) {
+		Log.d(LCAT, "onStartCmd action :: " + intent.getAction());
+		if (intent.getAction().equals(Constants.ACTION.CREATE) || intent.getAction().equals(Constants.ACTION.UPDATE)) {
 
 			Log.d(LCAT, "Intent CREATE ");
 			if (intent.hasExtra(TiC.PROPERTY_TITLE)) {
