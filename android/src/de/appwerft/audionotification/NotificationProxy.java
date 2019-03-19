@@ -27,6 +27,7 @@ public class NotificationProxy extends KrollProxy {
 	// Standard Debugging variables
 	public static final String LCAT = TiaudionotificationModule.LCAT + "_Proxy";
 	private Context ctx;
+	private boolean isOreo;
 	// Tracks the bound state of the service.
 
 	private KrollDict notificationOpts = new KrollDict();
@@ -36,24 +37,9 @@ public class NotificationProxy extends KrollProxy {
 	public NotificationProxy() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
-
+		isOreo = TiaudionotificationModule.isOreo;
 	}
-	public NotificationProxy(KrollDict opts) {
-		super();
-		ctx = TiApplication.getInstance().getApplicationContext();
-		if (opts.containsKeyAndNotNull(TiC.PROPERTY_TITLE))
-			notificationOpts.put(TiC.PROPERTY_TITLE, opts.getString(TiC.PROPERTY_TITLE));
-		if (opts.containsKeyAndNotNull(TiC.PROPERTY_LIFECYCLE_CONTAINER))
-			notificationOpts.put(TiC.PROPERTY_LIFECYCLE_CONTAINER, opts.get(TiC.PROPERTY_LIFECYCLE_CONTAINER));
-		if (opts.containsKeyAndNotNull(TiC.PROPERTY_SUBTITLE))
-			notificationOpts.put(TiC.PROPERTY_SUBTITLE, opts.getString(TiC.PROPERTY_SUBTITLE));
-		if (opts.containsKeyAndNotNull(TiC.PROPERTY_ICON))
-			notificationOpts.put(TiC.PROPERTY_ICON, opts.getString(TiC.PROPERTY_ICON));
-		if (opts.containsKeyAndNotNull(TiC.PROPERTY_IMAGE)) {
-			notificationOpts.put(TiC.PROPERTY_IMAGE, getImagePath(opts.getString(TiC.PROPERTY_IMAGE)));
-		}
-        
-	}
+	
 
 	
 	@Kroll.onAppCreate
@@ -96,11 +82,11 @@ public class NotificationProxy extends KrollProxy {
 		}
 		serviceIntent.setAction(Constants.ACTION.CREATE);
 		if (TiaudionotificationModule.isOreo) {
-			Log.d(LCAT,"Orea: ctx.startForegroundService");
+			Log.d(LCAT,"Oreo: ctx.startForegroundService");
 			ctx.startForegroundService(serviceIntent);
 			Log.d("LCAT", "startForegroundService(serviceIntent)");
 		} else {
-			Log.d(LCAT,"preOrea: ctx.startService");
+			Log.d(LCAT,"preOreo: ctx.startService");
 			ctx.startService(serviceIntent);
 		}
 		notificationactive = true;

@@ -49,13 +49,7 @@ public class TiaudionotificationModule extends KrollModule {
 	private Context ctx;
 	private NotificationProxy proxy = null;
 
-	public NotificationProxy Notification(KrollDict opts) {
-		if (this.proxy == null) {
-			this.proxy = new NotificationProxy(opts);
-		}
-		return this.proxy;
-
-	}
+	
 
 	public TiaudionotificationModule() {
 		super();
