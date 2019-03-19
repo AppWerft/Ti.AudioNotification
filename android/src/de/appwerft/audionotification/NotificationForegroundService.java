@@ -39,11 +39,13 @@ public class NotificationForegroundService extends Service {
 	private NotificationManager notificationManager;
 	private KrollDict notificationOpts = new KrollDict();
 	private long when = 0;
+	private boolean isOreo;
 	
 
 	public NotificationForegroundService() {
 		super();
 		ctx = TiApplication.getInstance().getApplicationContext();
+		isOreo = TiaudionotificationModule.isOreo;
 		notificationOpts.put("title", "Title");
 		notificationOpts.put("subtitle", "SubTitle");
 	}
@@ -80,7 +82,7 @@ public class NotificationForegroundService extends Service {
 			Log.e(LCAT, source + " was null, flags=" + flags + " bits=" + Integer.toBinaryString(flags));
 			return START_STICKY;
 		}
-		Log.d(LCAT, "onStartCommand with action " + intent.getAction());
+		Log.d(LCAT, "onStartCommand with action :: " + intent.getAction());
 		if (intent.getAction().equals("CREATE") || intent.getAction().equals("UPDATE")) {
 
 			Log.d(LCAT, "Intent CREATE ");
@@ -96,7 +98,7 @@ public class NotificationForegroundService extends Service {
 			if (intent.hasExtra(TiC.PROPERTY_IMAGE)) {
 				notificationOpts.put(TiC.PROPERTY_IMAGE, intent.getStringExtra(TiC.PROPERTY_IMAGE));
 			}
-			if (TiaudionotificationModule.isOreo) {
+			if (isOreo == true) {
 				startForeground(Constants.NOTIFICATION.ID, getNotification());
 				Log.d(LCAT, "startForeground() started");
 			} else {
