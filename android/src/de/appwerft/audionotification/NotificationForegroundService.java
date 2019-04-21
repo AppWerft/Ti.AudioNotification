@@ -138,9 +138,10 @@ public class NotificationForegroundService extends Service {
 		notificationBuilder //
 		.setSound(null)		
 		.setAutoCancel(true).setSmallIcon(R("applogo", "drawable"))//
-				.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH) //
+				.setDefaults(0).setPriority(Notification.PRIORITY_HIGH) //
 				.setWhen(when).setOngoing(true).setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
 				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(getPendingIntent());
+		
 		// Set the Channel ID for Android O.
 		Log.d(LCAT, "getNotification adding ChannelId");
 		if (TiaudionotificationModule.		isOreo) {
