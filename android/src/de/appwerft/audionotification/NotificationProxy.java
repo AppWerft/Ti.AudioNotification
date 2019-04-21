@@ -82,9 +82,8 @@ public class NotificationProxy extends KrollProxy {
 		}
 		serviceIntent.setAction(Constants.ACTION.CREATE);
 		if (TiaudionotificationModule.isOreo) {
-			Log.d(LCAT,"Oreo: ctx.startForegroundService");
 			ctx.startForegroundService(serviceIntent);
-			Log.d("LCAT", "startForegroundService(serviceIntent)");
+			Log.d(LCAT, "startForegroundService(serviceIntent)");
 		} else {
 			Log.d(LCAT,"preOreo: ctx.startService");
 			ctx.startService(serviceIntent);
@@ -120,6 +119,11 @@ public class NotificationProxy extends KrollProxy {
 	public void setLargeIcon(String path) {
 		notificationOpts.put(TiC.PROPERTY_IMAGE, cacheImage(path));
 		update();
+	}
+	
+	@Kroll.method
+	public void release() {
+		release();
 	}
 
 	private Bitmap loadImage(String imageName) {

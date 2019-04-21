@@ -136,7 +136,8 @@ public class NotificationForegroundService extends Service {
 					 * , Constants.NOTIFICATION.CHANNELID
 					 */);
 		notificationBuilder //
-				.setAutoCancel(true).setSmallIcon(R("applogo", "drawable"))//
+		.setSound(null)		
+		.setAutoCancel(true).setSmallIcon(R("applogo", "drawable"))//
 				.setDefaults(Notification.DEFAULT_ALL).setPriority(Notification.PRIORITY_HIGH) //
 				.setWhen(when).setOngoing(true).setContentTitle(notificationOpts.getString(TiC.PROPERTY_TITLE))
 				.setContentText(notificationOpts.getString(TiC.PROPERTY_SUBTITLE)).setContentIntent(getPendingIntent());
